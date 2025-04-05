@@ -13,6 +13,5 @@ MonoBehaviour:
   m_Name: AchievementDataBase
   m_EditorClassIdentifier: 
   achievements:
-  - {fileID: 11400000, guid: 836aa47d88e57e54bb2ee0a74c64f007, type: 2}
-  - {fileID: 11400000, guid: b214c18ea00aa24439f55cfe6c1eaf63, type: 2}
-  - {fileID: 11400000, guid: 035be0e509579274c88c590d5fc4665c, type: 2}
+  - {fileID: 11400000, guid: 8f70d5267d63ae542b68f524e5aeb0be, type: 2}
+  - {fileID: 11400000, guid: 460347bee3e758b449c9f5cde010c3a0, type: 2}

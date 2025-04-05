@@ -7,3 +7,4 @@
 /scripts/AchievementDataManager.cs.meta
 /scripts/AchievementUserDataLoader.cs.meta
 /*.meta
+/ScriptableObject/*asset.meta
