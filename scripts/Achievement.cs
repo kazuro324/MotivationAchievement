@@ -2,7 +2,7 @@
 
 namespace Kazuro.Editor.Achievement
 {
-    public enum CategoryType
+    public enum DayCategoryType
     {
         Daily,
         Weekly,
@@ -14,7 +14,7 @@ namespace Kazuro.Editor.Achievement
     {
         [SerializeField] private string achievementName;
         [SerializeField, Multiline(2)] private string achievementDescription;
-        [SerializeField] private CategoryType category;
+        [SerializeField] private DayCategoryType dayCategory;
         [SerializeField] private Texture2D notAchievementIcon;
         [SerializeField] private Texture2D icon;
         [SerializeField] private bool isHide;
@@ -57,6 +57,6 @@ namespace Kazuro.Editor.Achievement
 
         public Texture2D NotAchievementIcon { get { return notAchievementIcon; } }
 
-        public CategoryType Category { get { return category; } }
+        public DayCategoryType DayCategory { get { return dayCategory; } }
     }
 }

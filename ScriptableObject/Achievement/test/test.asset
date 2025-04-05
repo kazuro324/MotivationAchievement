@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   achievementName: test
   achievementDescription: 0.1hour achievement
-  category: 0
+  dayCategory: 0
   notAchievementIcon: {fileID: 2800000, guid: 30eec088cb0478b4c8b62e9be5485a20, type: 3}
   icon: {fileID: 2800000, guid: 30eec088cb0478b4c8b62e9be5485a20, type: 3}
   isHide: 0

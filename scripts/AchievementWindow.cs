@@ -91,7 +91,7 @@ namespace Kazuro.Editor.Achievement
 
             achievementBoxTree.CloneTree(this.rootVisualElement);
             var box = rootVisualElement.Query<GroupBox>("AchievementBox").NotVisible().First();
-            achievementContainers[(int)achievement.Category].Add(box);
+            achievementContainers[(int)achievement.DayCategory].Add(box);
             AchievementManager.Instance.AddAchieveReferenceList(box, achievement);
             UpdateBoxVisual(box, achievement);
         }
