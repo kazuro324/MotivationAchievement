@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 1217de6d229aeb948899cec6391fd4a2
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - m_ViewDataDictionary: {instanceID: 0}
+  - achievementWindowTree: {fileID: 9197481963319205126, guid: 7b0f4a70e719c3b4eafaadb42ff545a4, type: 3}
+  - achievementBoxTree: {fileID: 9197481963319205126, guid: 009f811d2ce316a47addd421664512f9, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

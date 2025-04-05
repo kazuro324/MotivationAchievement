@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: e355f49c9e8e1374e831ec7dbc76bbc5
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - m_ViewDataDictionary: {instanceID: 0}
+  - notificationBoxTree: {fileID: 9197481963319205126, guid: 6e75a7d4f9f7da24bafd746d6cad6b7a, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

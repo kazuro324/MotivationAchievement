@@ -1,0 +1,17 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
+    <ui:VisualElement name="OverVisualContainer" style="flex-grow: 1; height: auto;">
+        <ui:Label text="Achievement Progress" name="Title" style="-unity-font-style: bold;" />
+        <ui:ProgressBar value="1" title="0 / 1" high-value="1" name="AllSatisfiedProgressBar" style="left: auto;" />
+        <ui:TabView name="CategoryTabBar">
+            <ui:Tab label="Daily" name="DailyTab">
+                <ui:ScrollView name="AchievementContainer" mode="Vertical" horizontal-scroller-visibility="Hidden" style="height: auto; width: auto;" />
+            </ui:Tab>
+            <ui:Tab label="Weekly" name="WeeklyTab">
+                <ui:ScrollView name="AchievementContainer" mode="Vertical" horizontal-scroller-visibility="Hidden" style="height: auto; width: auto;" />
+            </ui:Tab>
+            <ui:Tab label="Total" name="TotalTab">
+                <ui:ScrollView name="AchievementContainer" mode="Vertical" horizontal-scroller-visibility="Hidden" style="height: auto; width: auto;" />
+            </ui:Tab>
+        </ui:TabView>
+    </ui:VisualElement>
+</ui:UXML>

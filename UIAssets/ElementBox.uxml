@@ -1,0 +1,11 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
+    <Style src="project://database/Assets/Editor/UIAssets/Box.uss?fileID=7433441132597879392&amp;guid=3453eee8d607bef44bc0d65aef91c971&amp;type=3#Box" />
+    <ui:GroupBox name="AchievementBox" style="margin-bottom: 10px; flex-direction: row; visibility: hidden;">
+        <ui:Image name="AchievementIcon" style="--unity-image: width 64px; height: 64px; -unity-background-scale-mode: scale-to-fit; margin-right: 10px; width: 64px;" />
+        <ui:VisualElement name="InformationContainer" style="flex-grow: 1;">
+            <ui:Label text="Title" name="AchievementTitle" style="-unity-font-style: bold; font-size: 16px; margin-left: 0; margin-bottom: 5px; width: 246px; height: 17px; margin-top: 0; margin-right: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
+            <ui:Label text="Description" name="AchievementDescription" style="height: 27px; justify-content: center; align-content: center; align-items: auto; flex-direction: column; flex-wrap: nowrap; flex-grow: 0; flex-basis: initial; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; -unity-font-style: normal;" />
+            <ui:ProgressBar value="0" title="0 / 1" name="SatisfiedProgressBar" high-value="1" style="margin-left: 10px; margin-right: 10px;" />
+        </ui:VisualElement>
+    </ui:GroupBox>
+</ui:UXML>
