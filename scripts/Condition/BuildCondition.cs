@@ -6,7 +6,7 @@ using static Kazuro.Editor.Achievement.AchievementCondition;
 ///</summary>
 namespace Kazuro.Editor.Achievement
 {
-    [CreateAssetMenu(menuName = "Kazuro/Editor/Achievement/Build Condition")]
+    [CreateAssetMenu(menuName = "Kazuro/Editor/Achievement/Build Condition"), Icon("Assets/Editor/scripts/Condition/Icons/BuildCondition.png")]
     public class BuildCondition : AchievementCondition
     {
         [SerializeField] private DayCategoryType dayCategory;

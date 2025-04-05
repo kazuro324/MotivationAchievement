@@ -6,7 +6,7 @@ using UnityEngine;
 ///</summary>
 namespace Kazuro.Editor.Achievement
 {
-    [CreateAssetMenu(menuName = "Kazuro/Editor/Achievement/Play Condition")]
+    [CreateAssetMenu(menuName = "Kazuro/Editor/Achievement/Play Condition"), Icon("Assets/Editor/scripts/Condition/Icons/PlayCondition.png")]
     public class PlayCondition : AchievementCondition
     {
         [SerializeField] private DayCategoryType dayCategory;

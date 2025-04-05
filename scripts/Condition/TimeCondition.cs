@@ -2,11 +2,11 @@ using UnityEditor;
 using UnityEngine;
 
 ///<summary>
-///指定された時間作業をすると達成する
+///指定された時間作業をすると達成
 ///</summary>
 namespace Kazuro.Editor.Achievement
 {
-    [CreateAssetMenu(menuName = "Kazuro/Editor/Achievement/Time Condition")]
+    [CreateAssetMenu(menuName = "Kazuro/Editor/Achievement/Time Condition"), Icon("Assets/Editor/scripts/Condition/Icons/TimeCondition.png")]
     public class TimeCondition : AchievementCondition
     {
 
