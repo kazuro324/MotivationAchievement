@@ -7,7 +7,7 @@ namespace Kazuro.Editor.Achievement
     {
         [SerializeField] private bool isTotal;
         [SerializeField] private byte targetBootCount;
-        public override bool IsSatisfied(AchievementDataManager data)
+        public override bool IsAchieved(AchievementDataManager data)
         {
             if (isTotal)
             {
