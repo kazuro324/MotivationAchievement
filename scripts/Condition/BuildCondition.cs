@@ -1,4 +1,5 @@
 using UnityEngine;
+using static Kazuro.Editor.Achievement.AchievementCondition;
 
 ///<summary>
 ///ビルドした回数が指定数超えると達成
@@ -8,15 +9,25 @@ namespace Kazuro.Editor.Achievement
     [CreateAssetMenu(menuName = "Kazuro/Editor/Achievement/Build Condition")]
     public class BuildCondition : AchievementCondition
     {
-        [SerializeField] private bool isTotal;
+        [SerializeField] private DayCategory dayCategory;
         [SerializeField] private byte targetBuildCount;
         public override bool IsAchieved(AchievementDataManager data)
         {
-            if (isTotal)
+            switch (dayCategory)
             {
-                return data.TotalBuildCount >= targetBuildCount;
+                case DayCategory.Daily:
+                    return data.CurrentBuildCount >= targetBuildCount;
+
+                case DayCategory.Weekly:
+                    return data.WeekBuildCount >= targetBuildCount;
+
+                case DayCategory.Total:
+                    return data.TotalBuildCount >= targetBuildCount;
+
+                default:
+                    Debug.LogWarning($"Invalid DayCategory: {dayCategory}");
+                    return false;
             }
-            return data.CurrentBuildCount >= targetBuildCount;
         }
     }
 }
