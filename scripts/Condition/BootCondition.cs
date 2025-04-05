@@ -5,19 +5,19 @@ namespace Kazuro.Editor.Achievement
     [CreateAssetMenu(menuName = "Kazuro/Editor/Achievement/Boot Condition")]
     public class BootCondition : AchievementCondition
     {
-        [SerializeField] private DayCategory dayCategory;
+        [SerializeField] private DayCategoryType dayCategory;
         [SerializeField] private byte targetBootCount;
         public override bool IsAchieved(AchievementDataManager data)
         {
             switch (dayCategory)
             {
-                case DayCategory.Daily:
+                case DayCategoryType.Daily:
                     return data.TodayBootCount >= targetBootCount;
 
-                case DayCategory.Weekly:
+                case DayCategoryType.Weekly:
                     return data.WeekBootDays >= targetBootCount;
 
-                case DayCategory.Total:
+                case DayCategoryType.Total:
                     return data.TotalBootCount >= targetBootCount;
 
                 default:
