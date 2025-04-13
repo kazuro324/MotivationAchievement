@@ -73,41 +73,42 @@ namespace Kazuro.Editor.Achievement
             TemporaryLoadData();
             LoadData();
 
+            TimeSpan timeDifference = DateTime.Now - lastOpenDay;
+
             //連日起動の確認
-            if (lastOpenDay.AddDays(ContinueDay) == DateTime.Today)
+            if (timeDifference.Days == ContinueDay)
             {
                 currentContinueDays++;
-                if (currentContinueDays > highestContinueDays)
-                {
-                    highestContinueDays = currentContinueDays;
-                }
+                highestContinueDays = Math.Max(currentContinueDays, highestContinueDays);
             }
-            else
+            else if (timeDifference.Days > ContinueDay)
             {
-                if (lastOpenDay != DateTime.Today)
-                {
-                    currentContinueDays = 0;
-                }
+                currentContinueDays = 0;
             }
 
-            if (lastOpenDay != DateTime.Today)
+            if (timeDifference.Days != 0)
             {
                 weekBootDays++;
-            }
 
-            //週間の管理
-            if (DateTime.Today.DayOfWeek == DayOfWeek.Sunday && lastOpenDay != DateTime.Today)
-            {
-                weekWorkTime = 0;
-                weekPlayCount = 0;
-                weekBuildCount = 0;
-                weekBootCount = 0;
-                weekBootDays = 0;
-                weekContinueFirstDays = CurrentContinueDays;
+                //週間の管理
+                if (DateTime.Today.DayOfWeek == DayOfWeek.Sunday)
+                {
+                    ResetWeeklyStats();
+                }
             }
 
             EditorApplication.playModeStateChanged += CountPlayMode;
             EditorApplication.quitting += SaveData;
+        }
+
+        private void ResetWeeklyStats()
+        {
+            weekWorkTime = 0;
+            weekPlayCount = 0;
+            weekBuildCount = 0;
+            weekBootCount = 0;
+            weekBootDays = 0;
+            weekContinueFirstDays = CurrentContinueDays;
         }
 
         public void TemporarySaveData()
