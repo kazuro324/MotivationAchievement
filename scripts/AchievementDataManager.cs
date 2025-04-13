@@ -1,5 +1,6 @@
 using System;
 using UnityEditor;
+using UnityEngine;
 
 namespace Kazuro.Editor.Achievement
 {
@@ -18,6 +19,7 @@ namespace Kazuro.Editor.Achievement
         private DateTime firstStartDate;
         private uint weekContinueFirstDays = 0;
         private uint currentContinueDays = 0;
+        private uint highestContinueDays = 0;
 
         private int currentBuildCount = 0;
         private int weekBuildCount = 0;
@@ -55,7 +57,9 @@ namespace Kazuro.Editor.Achievement
 
         public int WeekBootDays { get { return weekBootDays; } }
 
-        public uint WeekContinueFirstDays { get { return weekContinueFirstDays; } }
+        public uint WeekContinueDays { get { return currentContinueDays - weekContinueFirstDays; } }
+
+        public uint HighestContinueDays { get { return highestContinueDays; } }
 
         private bool isBuilding = false;
 
@@ -73,6 +77,10 @@ namespace Kazuro.Editor.Achievement
             if (lastOpenDay.AddDays(ContinueDay) == DateTime.Today)
             {
                 currentContinueDays++;
+                if (currentContinueDays > highestContinueDays)
+                {
+                    highestContinueDays = currentContinueDays;
+                }
             }
             else
             {
@@ -133,6 +141,7 @@ namespace Kazuro.Editor.Achievement
             totalWorkTime = loadData.totalWorkTime;
 
             currentContinueDays = loadData.currentContinueDays;
+            highestContinueDays = loadData.highestContinueDays;
 
             firstStartDate = UserData.ArrayToDate(loadData.firstOpenDateArray);
             lastOpenDay = UserData.ArrayToDate(loadData.lastOpenDate);
@@ -146,7 +155,8 @@ namespace Kazuro.Editor.Achievement
             loadedData.weekBootCount = WeekBootCount + TodayBootCount;
             loadedData.weekWorkTime += (uint)EditorApplication.timeSinceStartup;
             loadedData.weekBootDays = WeekBootDays;
-            loadedData.weekContinueFirstDays = WeekContinueFirstDays;
+            loadedData.weekContinueFirstDays = weekContinueFirstDays;
+            loadedData.highestContinueDays = HighestContinueDays;
 
             loadedData.totalBuildCount = TotalBuildCount + CurrentBuildCount;
             loadedData.totalPlayModeCount = TotalPlayCount + PlayCount;
