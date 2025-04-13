@@ -1,5 +1,6 @@
 using System;
 using UnityEditor;
+using UnityEngine;
 
 namespace Kazuro.Editor.Achievement
 {
@@ -18,6 +19,7 @@ namespace Kazuro.Editor.Achievement
         private DateTime firstStartDate;
         private uint weekContinueFirstDays = 0;
         private uint currentContinueDays = 0;
+        private uint highestContinueDays = 0;
 
         private int currentBuildCount = 0;
         private int weekBuildCount = 0;
@@ -55,7 +57,9 @@ namespace Kazuro.Editor.Achievement
 
         public int WeekBootDays { get { return weekBootDays; } }
 
-        public uint WeekContinueFirstDays { get { return weekContinueFirstDays; } }
+        public uint WeekContinueDays { get { return currentContinueDays - weekContinueFirstDays; } }
+
+        public uint HighestContinueDays { get { return highestContinueDays; } }
 
         private bool isBuilding = false;
 
@@ -69,37 +73,42 @@ namespace Kazuro.Editor.Achievement
             TemporaryLoadData();
             LoadData();
 
+            TimeSpan timeDifference = DateTime.Now - lastOpenDay;
+
             //òAì˙ãNìÆÇÃämîF
-            if (lastOpenDay.AddDays(ContinueDay) == DateTime.Today)
+            if (timeDifference.Days == ContinueDay)
             {
                 currentContinueDays++;
+                highestContinueDays = Math.Max(currentContinueDays, highestContinueDays);
             }
-            else
+            else if (timeDifference.Days > ContinueDay)
             {
-                if (lastOpenDay != DateTime.Today)
-                {
-                    currentContinueDays = 0;
-                }
+                currentContinueDays = 0;
             }
 
-            if (lastOpenDay != DateTime.Today)
+            if (timeDifference.Days != 0)
             {
                 weekBootDays++;
-            }
 
-            //èTä‘ÇÃä«óù
-            if (DateTime.Today.DayOfWeek == DayOfWeek.Sunday && lastOpenDay != DateTime.Today)
-            {
-                weekWorkTime = 0;
-                weekPlayCount = 0;
-                weekBuildCount = 0;
-                weekBootCount = 0;
-                weekBootDays = 0;
-                weekContinueFirstDays = CurrentContinueDays;
+                //èTä‘ÇÃä«óù
+                if (DateTime.Today.DayOfWeek == DayOfWeek.Sunday)
+                {
+                    ResetWeeklyStats();
+                }
             }
 
             EditorApplication.playModeStateChanged += CountPlayMode;
             EditorApplication.quitting += SaveData;
+        }
+
+        private void ResetWeeklyStats()
+        {
+            weekWorkTime = 0;
+            weekPlayCount = 0;
+            weekBuildCount = 0;
+            weekBootCount = 0;
+            weekBootDays = 0;
+            weekContinueFirstDays = CurrentContinueDays;
         }
 
         public void TemporarySaveData()
@@ -133,6 +142,7 @@ namespace Kazuro.Editor.Achievement
             totalWorkTime = loadData.totalWorkTime;
 
             currentContinueDays = loadData.currentContinueDays;
+            highestContinueDays = loadData.highestContinueDays;
 
             firstStartDate = UserData.ArrayToDate(loadData.firstOpenDateArray);
             lastOpenDay = UserData.ArrayToDate(loadData.lastOpenDate);
@@ -146,7 +156,8 @@ namespace Kazuro.Editor.Achievement
             loadedData.weekBootCount = WeekBootCount + TodayBootCount;
             loadedData.weekWorkTime += (uint)EditorApplication.timeSinceStartup;
             loadedData.weekBootDays = WeekBootDays;
-            loadedData.weekContinueFirstDays = WeekContinueFirstDays;
+            loadedData.weekContinueFirstDays = weekContinueFirstDays;
+            loadedData.highestContinueDays = HighestContinueDays;
 
             loadedData.totalBuildCount = TotalBuildCount + CurrentBuildCount;
             loadedData.totalPlayModeCount = TotalPlayCount + PlayCount;

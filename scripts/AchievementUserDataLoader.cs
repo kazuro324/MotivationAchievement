@@ -44,6 +44,7 @@ namespace Kazuro.Editor.Achievement
         public uint weekContinueFirstDays;
 
         public uint currentContinueDays;
+        public uint highestContinueDays; 
         public uint totalWorkTime;
         public int totalBuildCount;
         public int totalPlayModeCount;
@@ -92,6 +93,7 @@ namespace Kazuro.Editor.Achievement
                 newData.weekBootDays = 0;
                 newData.weekContinueFirstDays = 0;
                 newData.currentContinueDays = 0;
+                newData.highestContinueDays = 0;
                 newData.totalWorkTime = 0;
                 newData.totalBuildCount = 0;
                 newData.totalPlayModeCount = 0;

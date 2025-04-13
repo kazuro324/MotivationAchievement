@@ -2,27 +2,32 @@ using UnityEditor;
 using UnityEngine;
 
 ///<summary>
-///指定された時間作業をすると達成する
+///指定された時間作業をすると達成
 ///</summary>
 namespace Kazuro.Editor.Achievement
 {
-    [CreateAssetMenu(menuName = "Kazuro/Editor/Achievement/Time Condition")]
+    [CreateAssetMenu(menuName = "Kazuro/Editor/Achievement/Time Condition"), Icon("Assets/Editor/scripts/Condition/Icons/TimeCondition.png")]
     public class TimeCondition : AchievementCondition
     {
-
+        [SerializeField] private double second;
+        [SerializeField] private double minute;
         [SerializeField] private double hour;
+
+        const double ONEHOUR = 3600d;
+        const double ONEMINUTE = 60d;
+
         public override bool IsAchieved(AchievementDataManager data)
         {
-            if (EditorApplication.timeSinceStartup >= HourToSeconds())
+            if (EditorApplication.timeSinceStartup >= ToSeconds())
             {
                 return true;
             }
             return false;
         }
 
-        private double HourToSeconds()
+        private double ToSeconds()
         {
-            return (hour * 60d) * 60d;
+            return (hour * ONEHOUR) + (minute * ONEMINUTE) + second;
         }
     }
 }
