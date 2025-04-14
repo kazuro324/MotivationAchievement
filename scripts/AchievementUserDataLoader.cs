@@ -106,11 +106,12 @@ namespace Kazuro.Editor.Achievement
 
     public class AchievementUserDataLoader
     {
-        const string saveFilePath = "Assets/Editor/Save/UserData.json";
-        const string alternativeSaveFilePath = "Assets/Editor/Save/AlternativeUserData.json";
-        const string alternativeSaveMetaPath = "Assets/Editor/Save/AlternativeUserData.json.meta";
-        const string temporarySaveFilePath = "Assets/Editor/Save/TempData.json";
-        const string temporarySaveMetaPath = "Assets/Editor/Save/TempData.json.meta";
+        const string dataFolder = "Assets/Editor/Save/";
+        const string saveFilePath = dataFolder + "UserData.json";
+        const string alternativeSaveFilePath = dataFolder + "AlternativeUserData.json";
+        const string alternativeSaveMetaPath = dataFolder + "AlternativeUserData.json.meta";
+        const string temporarySaveFilePath = dataFolder + "TempData.json";
+        const string temporarySaveMetaPath = dataFolder + "TempData.json.meta";
         const int EmptySearchLength = 6;
 
         public static void TemporarySaveData(TempData data)
@@ -121,6 +122,8 @@ namespace Kazuro.Editor.Achievement
             writer.Close();
             AssetDatabase.Refresh();
         }
+
+        private static bool IsSaveDirectory() => File.Exists(dataFolder);
 
         public static void DeleteTemporaryData()
         {
@@ -165,6 +168,12 @@ namespace Kazuro.Editor.Achievement
         public static void SaveData(UserData data)
         {
             var jsonData = JsonUtility.ToJson(data);
+
+            if (!IsSaveDirectory())
+            {
+                Directory.CreateDirectory(dataFolder);
+            }
+
             try
             {
                 var writer = new StreamWriter(saveFilePath, false);
@@ -184,6 +193,11 @@ namespace Kazuro.Editor.Achievement
         public static UserData LoadData()
         {
             UserData loadData = UserData.New;
+
+            if (!IsSaveDirectory())
+            {
+                Directory.CreateDirectory(dataFolder);
+            }
 
             try
             {
@@ -213,10 +227,10 @@ namespace Kazuro.Editor.Achievement
                     loadData = UserData.New;
                 }
             }
-            catch
+            catch (Exception ex)
             {
                 loadData = UserData.New;
-                Debug.LogError("UserData.jsonの読み込みに失敗しました。");
+                Debug.LogError($"UserData.jsonの読み込みに失敗しました。 エラー文:{ex.Message}");
             }
             return loadData;
         }
