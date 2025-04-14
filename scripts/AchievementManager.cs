@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections;
 using UnityEngine;
 using UnityEditor;
 using UnityEditor.Compilation;
@@ -23,7 +22,17 @@ namespace Kazuro.Editor.Achievement
 
         public int AchievementCount { get { return dataBase.Achievements.Length; } }
         public Achievement[] GetAchievementDataBase { get { return dataBase.Achievements; } }
-        public static AchievementManager Instance { get { return instance; } }
+        public static AchievementManager Instance 
+        { 
+            get 
+            {
+                if (instance == null)
+                {
+                    instance = CreateInstance<AchievementManager>();
+                }
+                return instance;
+            }
+        }
         public AchievementDataManager DataManager { get { return dataManager; } }
 
 
@@ -31,14 +40,6 @@ namespace Kazuro.Editor.Achievement
         [InitializeOnLoadMethod]
         private static void InitializeInstance()
         {
-            if (Instance != null)
-            {
-                return;
-            }
-
-
-            instance = CreateInstance<AchievementManager>();
-
             if (Instance.dataBase == null)
             {
                 Debug.LogWarning("AchievementDataBaseÇ™ê›íËÇ≥ÇÍÇƒÇ¢Ç‹ÇπÇÒÅB");
@@ -183,6 +184,20 @@ namespace Kazuro.Editor.Achievement
             return count;
         }
 
+        public void Dispose()
+        {
+            EndClass();
+
+            Instance.noAchievements.Clear();
+            Instance.removeAchievementQueue.Clear();
+            Instance.achieveReferenceList.Clear();
+
+            cancellationTokenSource.Cancel();
+
+            cancellationTokenSource.Dispose();
+
+            Debug.Log("Death Manager");
+        }
 
         [MenuItem("Achievement/View")]
         public static void View()
@@ -190,13 +205,20 @@ namespace Kazuro.Editor.Achievement
             Instance.dataManager.PrintInformation();
         }
 
-        public void Dispose()
+        [MenuItem("Achievement/Reload")]
+        public static void Reload()
         {
-            EndClass();
+            Instance.noAchievements.Clear();
+            Instance.removeAchievementQueue.Clear();
+            Instance.achieveReferenceList.Clear();
+            Instance.CheckAchieved();
+        }
 
-            cancellationTokenSource.Cancel();
-
-            cancellationTokenSource.Dispose();
+        [MenuItem("Achievement/Restart")]
+        public static void Restart()
+        {
+            instance = null;
+            InitializeInstance();
         }
     }
 }
