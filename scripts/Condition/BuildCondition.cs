@@ -15,8 +15,11 @@ namespace Kazuro.Editor.Achievement
         {
             switch (dayCategory)
             {
-                case DayCategoryType.Daily:
+                case DayCategoryType.CurrentSession:
                     return data.CurrentBuildCount >= targetBuildCount;
+
+                case DayCategoryType.Daily:
+                    return data.TodayBuildCount >= targetBuildCount;
 
                 case DayCategoryType.Weekly:
                     return data.WeekBuildCount >= targetBuildCount;

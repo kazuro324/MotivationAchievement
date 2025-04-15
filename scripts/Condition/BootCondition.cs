@@ -11,6 +11,9 @@ namespace Kazuro.Editor.Achievement
         {
             switch (dayCategory)
             {
+                case DayCategoryType.CurrentSession:
+                    return 1 >= targetBootCount;
+
                 case DayCategoryType.Daily:
                     return data.TodayBootCount >= targetBootCount;
 

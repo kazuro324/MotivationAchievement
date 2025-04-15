@@ -10,6 +10,12 @@ namespace Kazuro.Editor.Achievement
 
         const int ContinueDay = 1;
 
+        public uint TodayWorkTime { get { return loadedData.todayWorkTime; } }
+
+        public int TodayPlayCount { get { return loadedData.todayPlayCount; } }
+
+        public int TodayBuildCount { get { return loadedData.todayBuildCount; } }
+
         public int PlayCount { get { return tempData.playCount; } }
 
         public int CurrentBuildCount { get { return tempData.buildCount; } }
@@ -81,6 +87,8 @@ namespace Kazuro.Editor.Achievement
                 loadedData.totalBootDays++;
                 loadedData.todayBootCount = 0;
                 loadedData.todayWorkTime = 0;
+                loadedData.todayPlayCount = 0;
+                loadedData.todayBuildCount = 0;
 
                 //èTä‘ÇÃä«óù
                 if (DateTime.Today.DayOfWeek == DayOfWeek.Sunday)
@@ -143,6 +151,7 @@ namespace Kazuro.Editor.Achievement
                 return;
             }
             tempData.playCount++;
+            loadedData.todayPlayCount++;
             loadedData.weekPlayModeCount++;
             loadedData.totalPlayModeCount++;
         }
@@ -154,6 +163,7 @@ namespace Kazuro.Editor.Achievement
                 if (!isBuilding)
                 {
                     tempData.buildCount++;
+                    loadedData.todayBuildCount++;
                     loadedData.weekBuildCount++;
                     loadedData.totalBuildCount++;
                     isBuilding = true;
