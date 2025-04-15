@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ef42a979140582408e46576366d77c2, type: 3}
   m_Name: BootCondition
   m_EditorClassIdentifier: 
-  dayCategory: 0
+  dayCategory: 1
   targetBootCount: 1
