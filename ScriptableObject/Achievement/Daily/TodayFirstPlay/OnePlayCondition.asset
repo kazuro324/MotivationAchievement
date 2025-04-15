@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffa38789f659ec244b4c75ef6e39bc8f, type: 3}
   m_Name: OnePlayCondition
   m_EditorClassIdentifier: 
-  dayCategory: 0
+  dayCategory: 1
   playCount: 1
