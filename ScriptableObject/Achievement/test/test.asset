@@ -19,4 +19,4 @@ MonoBehaviour:
   icon: {fileID: 2800000, guid: 30eec088cb0478b4c8b62e9be5485a20, type: 3}
   isHide: 0
   achievementCondition:
-  - {fileID: 11400000, guid: dd04d82db44e1ab4e9c9254b0ec211f3, type: 2}
+  - {fileID: 11400000, guid: cc7d5ce9b4818314fb2f61e263a67b5a, type: 2}
