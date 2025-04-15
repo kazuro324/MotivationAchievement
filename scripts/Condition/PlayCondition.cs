@@ -16,8 +16,11 @@ namespace Kazuro.Editor.Achievement
         {
             switch (dayCategory)
             {
-                case DayCategoryType.Daily:
+                case DayCategoryType.CurrentSession:
                     return data.PlayCount >= playCount;
+
+                case DayCategoryType.Daily:
+                    return data.TodayPlayCount >= playCount;
 
                 case DayCategoryType.Weekly:
                     return data.WeekPlayCount >= playCount;

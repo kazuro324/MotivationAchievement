@@ -39,8 +39,10 @@ namespace Kazuro.Editor.Achievement
         public uint currentContinueDays;
 
         public uint currentWorkTime;
+        public int todayPlayCount;
         public uint todayWorkTime;
         public int todayBootCount;
+        public int todayBuildCount;
 
         public uint weekWorkTime;
         public int weekBuildCount;
@@ -95,6 +97,9 @@ namespace Kazuro.Editor.Achievement
                 DateToArray(ref newData.firstOpenDateArray, DateTime.Now);
                 DateToArray(ref newData.lastOpenDate, DateTime.Today);
                 newData.todayWorkTime = 0;
+                newData.todayPlayCount = 0;
+                newData.todayBuildCount = 0;
+                newData.todayBootCount = 0;
                 newData.weekBootCount = 0;
                 newData.weekBuildCount = 0;
                 newData.weekPlayModeCount = 0;
@@ -108,7 +113,6 @@ namespace Kazuro.Editor.Achievement
                 newData.totalBuildCount = 0;
                 newData.totalPlayModeCount = 0;
                 newData.totalBootCount = 0;
-                newData.todayBootCount = 0;
                 return newData;
             }
         }
