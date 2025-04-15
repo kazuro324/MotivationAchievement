@@ -9,13 +9,13 @@ namespace Kazuro.Editor.Achievement
     {
         public int buildCount;
         public int playCount;
-        public int bootCount;
+        public uint currentWorkTime;
 
-        public TempData(int buildCount, int playCount, int bootCount)
+        public TempData(int buildCount, int playCount, uint currentWorkTime)
         {
             this.buildCount = buildCount;
             this.playCount = playCount;
-            this.bootCount = bootCount;
+            this.currentWorkTime = currentWorkTime;
         }
 
         public static TempData New
@@ -25,7 +25,7 @@ namespace Kazuro.Editor.Achievement
                 var newData = new TempData();
                 newData.buildCount = 0;
                 newData.playCount = 0;
-                newData.bootCount = 0;
+                newData.currentWorkTime = 0;
                 return newData;
             }
         }
@@ -36,6 +36,14 @@ namespace Kazuro.Editor.Achievement
         public int[] firstOpenDateArray;
         public int[] lastOpenDate;
 
+        public uint currentContinueDays;
+
+        public uint currentWorkTime;
+        public int todayPlayCount;
+        public uint todayWorkTime;
+        public int todayBootCount;
+        public int todayBuildCount;
+
         public uint weekWorkTime;
         public int weekBuildCount;
         public int weekPlayModeCount;
@@ -43,12 +51,15 @@ namespace Kazuro.Editor.Achievement
         public int weekBootDays;
         public uint weekContinueFirstDays;
 
-        public uint currentContinueDays;
+        public uint highestContinueDays; 
         public uint totalWorkTime;
         public int totalBuildCount;
         public int totalPlayModeCount;
         public int totalBootCount;
-        public int todayBootCount;
+        public int totalBootDays;
+
+        public DateTime FirstOpenDate { get { return ArrayToDate(firstOpenDateArray); } }
+        public DateTime LastOpenDate { get { return ArrayToDate(lastOpenDate); } }
 
         private enum Date
         {
@@ -85,18 +96,23 @@ namespace Kazuro.Editor.Achievement
                 var newData = new UserData();
                 DateToArray(ref newData.firstOpenDateArray, DateTime.Now);
                 DateToArray(ref newData.lastOpenDate, DateTime.Today);
+                newData.todayWorkTime = 0;
+                newData.todayPlayCount = 0;
+                newData.todayBuildCount = 0;
+                newData.todayBootCount = 0;
                 newData.weekBootCount = 0;
                 newData.weekBuildCount = 0;
                 newData.weekPlayModeCount = 0;
                 newData.weekWorkTime = 0;
                 newData.weekBootDays = 0;
                 newData.weekContinueFirstDays = 0;
+                newData.currentWorkTime = 0;
                 newData.currentContinueDays = 0;
+                newData.highestContinueDays = 0;
                 newData.totalWorkTime = 0;
                 newData.totalBuildCount = 0;
                 newData.totalPlayModeCount = 0;
                 newData.totalBootCount = 0;
-                newData.todayBootCount = 0;
                 return newData;
             }
         }
@@ -104,11 +120,12 @@ namespace Kazuro.Editor.Achievement
 
     public class AchievementUserDataLoader
     {
-        const string saveFilePath = "Assets/Editor/Save/UserData.json";
-        const string alternativeSaveFilePath = "Assets/Editor/Save/AlternativeUserData.json";
-        const string alternativeSaveMetaPath = "Assets/Editor/Save/AlternativeUserData.json.meta";
-        const string temporarySaveFilePath = "Assets/Editor/Save/TempData.json";
-        const string temporarySaveMetaPath = "Assets/Editor/Save/TempData.json.meta";
+        const string dataFolder = "Assets/Editor/Save/";
+        const string saveFilePath = dataFolder + "UserData.json";
+        const string alternativeSaveFilePath = dataFolder + "AlternativeUserData.json";
+        const string alternativeSaveMetaPath = dataFolder + "AlternativeUserData.json.meta";
+        const string temporarySaveFilePath = dataFolder + "TempData.json";
+        const string temporarySaveMetaPath = dataFolder + "TempData.json.meta";
         const int EmptySearchLength = 6;
 
         public static void TemporarySaveData(TempData data)
@@ -120,10 +137,14 @@ namespace Kazuro.Editor.Achievement
             AssetDatabase.Refresh();
         }
 
-        public static void DeleteTemporaryData()
+        private static bool IsSaveDirectory() => File.Exists(dataFolder);
+
+        public static void DeleteTemporaryData(out bool isStartUp)
         {
+            isStartUp = true;
             if (File.Exists(temporarySaveFilePath))
             {
+                isStartUp = false;
                 File.Delete(temporarySaveFilePath);
                 File.Delete(temporarySaveMetaPath);
                 AssetDatabase.Refresh();
@@ -141,7 +162,7 @@ namespace Kazuro.Editor.Achievement
         }
 
 
-        public static TempData TemporaryLoadData()
+        public static TempData TemporaryLoadData(out bool isStartUp)
         {
             AssetDatabase.Refresh();
 
@@ -151,11 +172,12 @@ namespace Kazuro.Editor.Achievement
                 var tmpAsset = AssetDatabase.LoadAssetAtPath<TextAsset>(temporarySaveFilePath);
                 var tmpData = (TempData)JsonUtility.FromJson(tmpAsset.text, typeof(TempData));
 
-                DeleteTemporaryData();
+                DeleteTemporaryData(out isStartUp);
                 return tmpData;
             }
             catch
             {
+                isStartUp = true;
                 return TempData.New;
             }
         }
@@ -163,6 +185,12 @@ namespace Kazuro.Editor.Achievement
         public static void SaveData(UserData data)
         {
             var jsonData = JsonUtility.ToJson(data);
+
+            if (!IsSaveDirectory())
+            {
+                Directory.CreateDirectory(dataFolder);
+            }
+
             try
             {
                 var writer = new StreamWriter(saveFilePath, false);
@@ -175,13 +203,20 @@ namespace Kazuro.Editor.Achievement
                 writer.Write(jsonData);
                 writer.Close();
             }
-
-            AssetDatabase.Refresh();
+            finally
+            {
+                AssetDatabase.Refresh();
+            }
         }
 
         public static UserData LoadData()
         {
             UserData loadData = UserData.New;
+
+            if (!IsSaveDirectory())
+            {
+                Directory.CreateDirectory(dataFolder);
+            }
 
             try
             {
@@ -211,10 +246,10 @@ namespace Kazuro.Editor.Achievement
                     loadData = UserData.New;
                 }
             }
-            catch
+            catch (Exception ex)
             {
                 loadData = UserData.New;
-                Debug.LogError("UserData.jsonÇÃì«Ç›çûÇ›Ç…é∏îsÇµÇ‹ÇµÇΩÅB");
+                Debug.LogError($"UserData.jsonÇÃì«Ç›çûÇ›Ç…é∏îsÇµÇ‹ÇµÇΩÅB ÉGÉâÅ[ï∂:{ex.Message}");
             }
             return loadData;
         }

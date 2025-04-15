@@ -4,6 +4,7 @@ namespace Kazuro.Editor.Achievement
 {
     public enum DayCategoryType
     {
+        CurrentSession,
         Daily,
         Weekly,
         Total

@@ -5,14 +5,33 @@ using UnityEngine;
 ///</summary>
 namespace Kazuro.Editor.Achievement
 {
-    [CreateAssetMenu(menuName = "Kazuro/Editor/Achievement/DateContinue Condition")]
+    [CreateAssetMenu(menuName = "Kazuro/Editor/Achievement/DateContinue Condition"), Icon("Assets/Editor/scripts/Condition/Icons/DateContinueCondition.png")]
     public class DateContinueCondition : AchievementCondition
     {
-        [SerializeField] int continueStart;
+        private enum ContinueDateType
+        {
+            Current,
+            Week,
+            Highest
+        }
+
+        [SerializeField] private ContinueDateType continueDateType;
+        [SerializeField] int targetContinueDay;
 
         public override bool IsAchieved(AchievementDataManager data)
         {
-            return data.CurrentContinueDays > continueStart;
+            switch (continueDateType)
+            {
+                default:
+                case ContinueDateType.Current:
+                    return data.CurrentContinueDays > targetContinueDay;
+                
+                case ContinueDateType.Week:
+                    return data.WeekContinueDays > targetContinueDay;
+
+                case ContinueDateType.Highest:
+                    return data.HighestContinueDays > targetContinueDay;
+            }
         }
     }
 }

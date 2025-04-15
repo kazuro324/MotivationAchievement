@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections;
 using UnityEngine;
 using UnityEditor;
 using UnityEditor.Compilation;
@@ -17,13 +16,25 @@ namespace Kazuro.Editor.Achievement
         [SerializeField] private AchievementDataBase dataBase;
         private AchievementDataManager dataManager;
         private Dictionary<UnityEngine.UIElements.GroupBox, Achievement> achieveReferenceList = new Dictionary<UnityEngine.UIElements.GroupBox, Achievement>();
-        private List<Achievement> noAchievements = new List<Achievement>();
+        private HashSet<Achievement> noAchievements = new HashSet<Achievement>();
         private Queue<Achievement> removeAchievementQueue = new Queue<Achievement>();
         private static Queue<AchievementNotifyPopUp> visibleNotifyPopUpQueue = new Queue<AchievementNotifyPopUp>();
 
+
+        public event Action OnUpdate;
         public int AchievementCount { get { return dataBase.Achievements.Length; } }
         public Achievement[] GetAchievementDataBase { get { return dataBase.Achievements; } }
-        public static AchievementManager Instance { get { return instance; } }
+        public static AchievementManager Instance 
+        { 
+            get 
+            {
+                if (instance == null)
+                {
+                    instance = CreateInstance<AchievementManager>();
+                }
+                return instance;
+            }
+        }
         public AchievementDataManager DataManager { get { return dataManager; } }
 
 
@@ -31,14 +42,6 @@ namespace Kazuro.Editor.Achievement
         [InitializeOnLoadMethod]
         private static void InitializeInstance()
         {
-            if (Instance != null)
-            {
-                return;
-            }
-
-
-            instance = CreateInstance<AchievementManager>();
-
             if (Instance.dataBase == null)
             {
                 Debug.LogWarning("AchievementDataBaseが設定されていません。");
@@ -51,12 +54,12 @@ namespace Kazuro.Editor.Achievement
             // 未達成の実績をリストアップ&終わるまで待機
             Instance.CheckAchieved();
 
-            //EditorApplication.update += Instance.CheckClaimAchieved;
             CompilationPipeline.compilationStarted += Instance.StartCompile;
+            Instance.OnUpdate += Instance.CheckClaimAchieved;
 
             Debug.Log($"実績を読み込みました。登録実績数: {Instance.AchievementCount}");
 
-            Instance.CheckCanAchievementGrant(token);
+            Instance.UpdateAsync(token);
         }
 
         private void CheckAchieved()
@@ -88,18 +91,18 @@ namespace Kazuro.Editor.Achievement
             }
         }
 
-        private async void CheckCanAchievementGrant(CancellationToken token)
+        private async void UpdateAsync(CancellationToken token)
         {
-            while (true)
+            while (!token.IsCancellationRequested)
             {
-                Instance.CheckClaimAchieved();
+                OnUpdate?.Invoke();
                 await Task.Delay(1000, token);
             }
         }
 
         private static void EndClass()
         {
-            EditorApplication.update -= Instance.CheckClaimAchieved;
+            Instance.OnUpdate -= Instance.CheckClaimAchieved;
             CompilationPipeline.compilationStarted -= Instance.StartCompile;
         }
 
@@ -107,6 +110,7 @@ namespace Kazuro.Editor.Achievement
         {
             EndClass();
             dataManager.TemporarySaveData();
+            dataManager.SaveData();
         }
 
         public bool IsAchieved(Achievement achievement)
@@ -183,6 +187,18 @@ namespace Kazuro.Editor.Achievement
             return count;
         }
 
+        public void Dispose()
+        {
+            EndClass();
+
+            Instance.noAchievements.Clear();
+            Instance.removeAchievementQueue.Clear();
+            Instance.achieveReferenceList.Clear();
+
+            cancellationTokenSource.Cancel();
+
+            cancellationTokenSource.Dispose();
+        }
 
         [MenuItem("Achievement/View")]
         public static void View()
@@ -190,13 +206,13 @@ namespace Kazuro.Editor.Achievement
             Instance.dataManager.PrintInformation();
         }
 
-        public void Dispose()
+        [MenuItem("Achievement/Reload")]
+        public static void Reload()
         {
-            EndClass();
-
-            cancellationTokenSource.Cancel();
-
-            cancellationTokenSource.Dispose();
+            Instance.noAchievements.Clear();
+            Instance.removeAchievementQueue.Clear();
+            Instance.achieveReferenceList.Clear();
+            Instance.CheckAchieved();
         }
     }
 }

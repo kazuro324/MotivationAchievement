@@ -9,6 +9,7 @@ namespace Kazuro.Editor.Achievement
     {
         [SerializeField] private VisualTreeAsset achievementWindowTree;
         [SerializeField] private VisualTreeAsset achievementBoxTree;
+        [SerializeField] private Texture2D secretIcon;
 
         private static AchievementWindow currentOpenWindow;
 
@@ -17,6 +18,9 @@ namespace Kazuro.Editor.Achievement
 
         readonly Color invisibleProgressColor = new Color(0.1882353f, 0.1882353f, 0.1882353f, 1f);
         readonly Color achievedProgressColor = new Color(0.172549f, 0.3647059f, 0.5294118f, 1f);
+
+        const string SecretTitle = "秘匿された実績";
+        const string SecretDescription = "達成条件の不明な実績";
 
         [MenuItem("Achievement/Open Window")]
         public static void OpenWindow()
@@ -83,12 +87,6 @@ namespace Kazuro.Editor.Achievement
 
         private void GenerateAchievementElement(Achievement achievement)
         {
-            //非表示で未取得であれば非表示
-            if (achievement.IsHide && !AchievementManager.Instance.IsAchieved(achievement))
-            {
-                return;
-            }
-
             achievementBoxTree.CloneTree(this.rootVisualElement);
             var box = rootVisualElement.Query<GroupBox>("AchievementBox").NotVisible().First();
             achievementContainers[(int)achievement.DayCategory].Add(box);
@@ -105,9 +103,6 @@ namespace Kazuro.Editor.Achievement
             var description = informationContainer.Q<Label>("AchievementDescription");
             var boxImage = box.Q<Image>("AchievementIcon");
 
-            title.text = achievement.AchievementName;
-            description.text = achievement.AchievementDescription;
-
             //進捗表示
             int currentAchieved = achievement.GetConditionAchievedCount(AchievementManager.Instance.DataManager);
             int maxAchieved = achievement.AllConditionCount;
@@ -118,6 +113,19 @@ namespace Kazuro.Editor.Achievement
             achieveProgressBar.title = currentAchieved + " / " + maxAchieved;
 
             var progressFill = achieveProgressBar.Q(className: "unity-progress-bar__progress");
+
+            if (achievement.IsHide && !AchievementManager.Instance.IsAchieved(achievement))
+            {
+                title.text = SecretTitle;
+                description.text = SecretDescription;
+                boxImage.image = secretIcon;
+                return;
+            }
+            else
+            {
+                title.text = achievement.AchievementName;
+                description.text = achievement.AchievementDescription;
+            }
 
             //全ての進捗を達成すると色変化
             if (AchievementManager.Instance.IsAchieved(achievement))

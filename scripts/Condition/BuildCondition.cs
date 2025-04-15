@@ -6,7 +6,7 @@ using static Kazuro.Editor.Achievement.AchievementCondition;
 ///</summary>
 namespace Kazuro.Editor.Achievement
 {
-    [CreateAssetMenu(menuName = "Kazuro/Editor/Achievement/Build Condition")]
+    [CreateAssetMenu(menuName = "Kazuro/Editor/Achievement/Build Condition"), Icon("Assets/Editor/scripts/Condition/Icons/BuildCondition.png")]
     public class BuildCondition : AchievementCondition
     {
         [SerializeField] private DayCategoryType dayCategory;
@@ -15,8 +15,11 @@ namespace Kazuro.Editor.Achievement
         {
             switch (dayCategory)
             {
-                case DayCategoryType.Daily:
+                case DayCategoryType.CurrentSession:
                     return data.CurrentBuildCount >= targetBuildCount;
+
+                case DayCategoryType.Daily:
+                    return data.TodayBuildCount >= targetBuildCount;
 
                 case DayCategoryType.Weekly:
                     return data.WeekBuildCount >= targetBuildCount;
