@@ -1,67 +1,47 @@
 using System;
 using UnityEditor;
-using UnityEngine;
 
 namespace Kazuro.Editor.Achievement
 {
-    public class AchievementDataManager
+    public class AchievementDataManager : IDisposable
     {
         private UserData loadedData;
-
-        private uint weekWorkTime = 0;
-        private uint totalWorkTime = 0;
-
-        private int playCount = 0;
-        private int weekPlayCount = 0;
-        private int totalPlayCount = 0;
-
-        private DateTime lastOpenDay;
-        private DateTime firstStartDate;
-        private uint weekContinueFirstDays = 0;
-        private uint currentContinueDays = 0;
-        private uint highestContinueDays = 0;
-
-        private int currentBuildCount = 0;
-        private int weekBuildCount = 0;
-        private int totalBuildCount = 0;
-
-        private int todayBootCount = 0;
-        private int weekBootCount = 0;
-        private int totalBootCount = 0;
-
-        private int weekBootDays = 0;
+        private TempData tempData;
 
         const int ContinueDay = 1;
 
-        public int PlayCount { get { return playCount; } }
+        public int PlayCount { get { return tempData.playCount; } }
 
-        public int CurrentBuildCount { get { return currentBuildCount; } }
+        public int CurrentBuildCount { get { return tempData.buildCount; } }
 
-        public DateTime FirstStartDate { get { return firstStartDate; } }
+        public DateTime FirstStartDate { get { return loadedData.FirstOpenDate; } }
+        public DateTime LastOpenDate { get { return loadedData.LastOpenDate; } }
 
-        public int TotalBuildCount { get { return totalBuildCount; } }
+        public int TotalBuildCount { get { return loadedData.totalBuildCount; } }
 
-        public int TotalBootCount { get { return totalBootCount; } }
-        public int TodayBootCount { get { return todayBootCount; } }
+        public int TotalBootCount { get { return loadedData.totalBootCount; } }
+        public int TodayBootCount { get { return loadedData.todayBootCount; } }
 
-        public int TotalPlayCount { get { return totalPlayCount; } }
+        public int TotalPlayCount { get { return loadedData.totalPlayModeCount; } }
 
-        public uint TotalWorkTime { get { return totalWorkTime; } }
+        public uint TotalWorkTime { get { return loadedData.totalWorkTime; } }
 
-        public uint CurrentContinueDays { get { return currentContinueDays; } }
+        public uint CurrentContinueDays { get { return loadedData.currentContinueDays; } }
 
-        public uint WeekWorkTime { get { return weekWorkTime; } }
-        public int WeekPlayCount { get { return weekPlayCount; } }
-        public int WeekBuildCount { get { return weekBuildCount; } }
-        public int WeekBootCount { get { return weekBootCount; } }
+        public uint WeekWorkTime { get { return loadedData.weekWorkTime; } }
+        public int WeekPlayCount { get { return loadedData.weekPlayModeCount; } }
+        public int WeekBuildCount { get { return loadedData.weekBuildCount; } }
+        public int WeekBootCount { get { return loadedData.weekBootCount; } }
 
-        public int WeekBootDays { get { return weekBootDays; } }
+        public int WeekBootDays { get { return loadedData.weekBootDays; } }
 
-        public uint WeekContinueDays { get { return currentContinueDays - weekContinueFirstDays; } }
+        public uint WeekContinueDays { get { return loadedData.currentContinueDays - loadedData.weekContinueFirstDays; } }
 
-        public uint HighestContinueDays { get { return highestContinueDays; } }
+        public uint HighestContinueDays { get { return loadedData.highestContinueDays; } }
 
         private bool isBuilding = false;
+
+        private bool isStartUp = true;
 
         public AchievementDataManager()
         {
@@ -73,22 +53,34 @@ namespace Kazuro.Editor.Achievement
             TemporaryLoadData();
             LoadData();
 
-            TimeSpan timeDifference = DateTime.Now - lastOpenDay;
+            TimeSpan timeDifference = DateTime.Now - loadedData.LastOpenDate;
+
+            if (isStartUp)
+            {
+                loadedData.todayBootCount++;
+                loadedData.weekBootCount++;
+                loadedData.totalBootCount++;
+            }
 
             //連日起動の確認
             if (timeDifference.Days == ContinueDay)
             {
-                currentContinueDays++;
-                highestContinueDays = Math.Max(currentContinueDays, highestContinueDays);
+                loadedData.currentContinueDays++;
+                loadedData.weekContinueFirstDays++;
+                loadedData.highestContinueDays = Math.Max(CurrentContinueDays, HighestContinueDays);
             }
             else if (timeDifference.Days > ContinueDay)
             {
-                currentContinueDays = 0;
+                loadedData.currentContinueDays = 0;
+                loadedData.weekContinueFirstDays = 0;
             }
 
             if (timeDifference.Days != 0)
             {
-                weekBootDays++;
+                loadedData.weekBootDays++;
+                loadedData.totalBootDays++;
+                loadedData.todayBootCount = 0;
+                loadedData.todayWorkTime = 0;
 
                 //週間の管理
                 if (DateTime.Today.DayOfWeek == DayOfWeek.Sunday)
@@ -97,74 +89,48 @@ namespace Kazuro.Editor.Achievement
                 }
             }
 
+            AchievementManager.Instance.OnUpdate += CountBuild;
             EditorApplication.playModeStateChanged += CountPlayMode;
             EditorApplication.quitting += SaveData;
         }
 
         private void ResetWeeklyStats()
         {
-            weekWorkTime = 0;
-            weekPlayCount = 0;
-            weekBuildCount = 0;
-            weekBootCount = 0;
-            weekBootDays = 0;
-            weekContinueFirstDays = CurrentContinueDays;
+            loadedData.weekWorkTime = 0;
+            loadedData.weekPlayModeCount = 0;
+            loadedData.weekBuildCount = 0;
+            loadedData.weekBootCount = 0;
+            loadedData.weekBootDays = 0;
+            loadedData.weekContinueFirstDays = CurrentContinueDays;
         }
 
         public void TemporarySaveData()
         {
-            TempData tempData = new TempData(CurrentBuildCount, PlayCount, TodayBootCount);
+            TempData tempData = new TempData(CurrentBuildCount, PlayCount, (uint)EditorApplication.timeSinceStartup);
 
             AchievementUserDataLoader.TemporarySaveData(tempData);
         }
 
         private void TemporaryLoadData()
         {
-            TempData tempData = AchievementUserDataLoader.TemporaryLoadData();
-            todayBootCount = tempData.bootCount;
-            currentBuildCount = tempData.buildCount;
-            playCount = tempData.playCount;
+            TempData tempData = AchievementUserDataLoader.TemporaryLoadData(out isStartUp);
+
+            this.tempData = tempData;
         }
 
         private void LoadData()
         {
             UserData loadData = AchievementUserDataLoader.LoadData();
 
-            todayBootCount += loadData.todayBootCount;
-            weekBootCount = loadData.weekBootCount;
-            weekBuildCount = loadData.weekBuildCount;
-            weekPlayCount = loadData.weekPlayModeCount;
-            weekWorkTime = loadData.weekWorkTime;
-
-            totalBootCount = loadData.totalBootCount;
-            totalBuildCount = loadData.totalBuildCount;
-            totalPlayCount = loadData.totalPlayModeCount;
-            totalWorkTime = loadData.totalWorkTime;
-
-            currentContinueDays = loadData.currentContinueDays;
-            highestContinueDays = loadData.highestContinueDays;
-
-            firstStartDate = UserData.ArrayToDate(loadData.firstOpenDateArray);
-            lastOpenDay = UserData.ArrayToDate(loadData.lastOpenDate);
             loadedData = loadData;
         }
 
         public void SaveData()
         {
-            loadedData.weekBuildCount = WeekBuildCount + CurrentBuildCount;
-            loadedData.weekPlayModeCount = WeekPlayCount + PlayCount;
-            loadedData.weekBootCount = WeekBootCount + TodayBootCount;
-            loadedData.weekWorkTime += (uint)EditorApplication.timeSinceStartup;
-            loadedData.weekBootDays = WeekBootDays;
-            loadedData.weekContinueFirstDays = weekContinueFirstDays;
-            loadedData.highestContinueDays = HighestContinueDays;
-
-            loadedData.totalBuildCount = TotalBuildCount + CurrentBuildCount;
-            loadedData.totalPlayModeCount = TotalPlayCount + PlayCount;
-            loadedData.todayBootCount = TodayBootCount;
-            loadedData.totalBootCount = TotalBootCount;
-            loadedData.totalWorkTime += (uint)EditorApplication.timeSinceStartup;
-            loadedData.currentContinueDays = CurrentContinueDays;
+            loadedData.todayWorkTime += (uint)EditorApplication.timeSinceStartup - loadedData.currentWorkTime;
+            loadedData.weekWorkTime += (uint)EditorApplication.timeSinceStartup - loadedData.currentWorkTime;
+            loadedData.totalWorkTime += (uint)EditorApplication.timeSinceStartup - loadedData.currentWorkTime;
+            loadedData.currentWorkTime = (uint)EditorApplication.timeSinceStartup;
             UserData.DateToArray(ref loadedData.lastOpenDate, DateTime.Today);
 
             AchievementUserDataLoader.SaveData(loadedData);
@@ -176,7 +142,9 @@ namespace Kazuro.Editor.Achievement
             {
                 return;
             }
-            playCount++;
+            tempData.playCount++;
+            loadedData.weekPlayModeCount++;
+            loadedData.totalPlayModeCount++;
         }
 
         private void CountBuild()
@@ -185,7 +153,9 @@ namespace Kazuro.Editor.Achievement
             {
                 if (!isBuilding)
                 {
-                    currentBuildCount++;
+                    tempData.buildCount++;
+                    loadedData.weekBuildCount++;
+                    loadedData.totalBuildCount++;
                     isBuilding = true;
                 }
             }else
@@ -199,12 +169,16 @@ namespace Kazuro.Editor.Achievement
 
         public void PrintInformation()
         {
-            UnityEngine.Debug.Log($"Work Time: {EditorApplication.timeSinceStartup} TotalWorkTime: {totalWorkTime}");
+            UnityEngine.Debug.Log($"Work Time: {EditorApplication.timeSinceStartup} TotalWorkTime: {loadedData.totalWorkTime}");
             UnityEngine.Debug.Log($"Play Count: {PlayCount} Total: {TotalPlayCount}");
             UnityEngine.Debug.Log($"Boot Today: {TodayBootCount} Boot Total: {TotalBootCount}");
-            UnityEngine.Debug.Log($"LastOpenDay: {lastOpenDay} CurrentContinueDays: {CurrentContinueDays}");
-            UnityEngine.Debug.Log($"Boot Total: {TotalBootCount}");
-            UnityEngine.Debug.Log($"lastOpenDay: {lastOpenDay}");
+            UnityEngine.Debug.Log($"LastOpenDay: {LastOpenDate} CurrentContinueDays: {CurrentContinueDays}");
+            UnityEngine.Debug.Log($"Build: {CurrentBuildCount}");
+        }
+
+        public void Dispose()
+        {
+            AchievementManager.Instance.OnUpdate -= CountBuild;
         }
     }
 }

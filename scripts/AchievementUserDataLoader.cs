@@ -9,13 +9,13 @@ namespace Kazuro.Editor.Achievement
     {
         public int buildCount;
         public int playCount;
-        public int bootCount;
+        public uint currentWorkTime;
 
-        public TempData(int buildCount, int playCount, int bootCount)
+        public TempData(int buildCount, int playCount, uint currentWorkTime)
         {
             this.buildCount = buildCount;
             this.playCount = playCount;
-            this.bootCount = bootCount;
+            this.currentWorkTime = currentWorkTime;
         }
 
         public static TempData New
@@ -25,7 +25,7 @@ namespace Kazuro.Editor.Achievement
                 var newData = new TempData();
                 newData.buildCount = 0;
                 newData.playCount = 0;
-                newData.bootCount = 0;
+                newData.currentWorkTime = 0;
                 return newData;
             }
         }
@@ -36,6 +36,12 @@ namespace Kazuro.Editor.Achievement
         public int[] firstOpenDateArray;
         public int[] lastOpenDate;
 
+        public uint currentContinueDays;
+
+        public uint currentWorkTime;
+        public uint todayWorkTime;
+        public int todayBootCount;
+
         public uint weekWorkTime;
         public int weekBuildCount;
         public int weekPlayModeCount;
@@ -43,13 +49,15 @@ namespace Kazuro.Editor.Achievement
         public int weekBootDays;
         public uint weekContinueFirstDays;
 
-        public uint currentContinueDays;
         public uint highestContinueDays; 
         public uint totalWorkTime;
         public int totalBuildCount;
         public int totalPlayModeCount;
         public int totalBootCount;
-        public int todayBootCount;
+        public int totalBootDays;
+
+        public DateTime FirstOpenDate { get { return ArrayToDate(firstOpenDateArray); } }
+        public DateTime LastOpenDate { get { return ArrayToDate(lastOpenDate); } }
 
         private enum Date
         {
@@ -86,12 +94,14 @@ namespace Kazuro.Editor.Achievement
                 var newData = new UserData();
                 DateToArray(ref newData.firstOpenDateArray, DateTime.Now);
                 DateToArray(ref newData.lastOpenDate, DateTime.Today);
+                newData.todayWorkTime = 0;
                 newData.weekBootCount = 0;
                 newData.weekBuildCount = 0;
                 newData.weekPlayModeCount = 0;
                 newData.weekWorkTime = 0;
                 newData.weekBootDays = 0;
                 newData.weekContinueFirstDays = 0;
+                newData.currentWorkTime = 0;
                 newData.currentContinueDays = 0;
                 newData.highestContinueDays = 0;
                 newData.totalWorkTime = 0;
@@ -125,10 +135,12 @@ namespace Kazuro.Editor.Achievement
 
         private static bool IsSaveDirectory() => File.Exists(dataFolder);
 
-        public static void DeleteTemporaryData()
+        public static void DeleteTemporaryData(out bool isStartUp)
         {
+            isStartUp = true;
             if (File.Exists(temporarySaveFilePath))
             {
+                isStartUp = false;
                 File.Delete(temporarySaveFilePath);
                 File.Delete(temporarySaveMetaPath);
                 AssetDatabase.Refresh();
@@ -146,7 +158,7 @@ namespace Kazuro.Editor.Achievement
         }
 
 
-        public static TempData TemporaryLoadData()
+        public static TempData TemporaryLoadData(out bool isStartUp)
         {
             AssetDatabase.Refresh();
 
@@ -156,11 +168,12 @@ namespace Kazuro.Editor.Achievement
                 var tmpAsset = AssetDatabase.LoadAssetAtPath<TextAsset>(temporarySaveFilePath);
                 var tmpData = (TempData)JsonUtility.FromJson(tmpAsset.text, typeof(TempData));
 
-                DeleteTemporaryData();
+                DeleteTemporaryData(out isStartUp);
                 return tmpData;
             }
             catch
             {
+                isStartUp = true;
                 return TempData.New;
             }
         }
@@ -186,8 +199,10 @@ namespace Kazuro.Editor.Achievement
                 writer.Write(jsonData);
                 writer.Close();
             }
-
-            AssetDatabase.Refresh();
+            finally
+            {
+                AssetDatabase.Refresh();
+            }
         }
 
         public static UserData LoadData()
