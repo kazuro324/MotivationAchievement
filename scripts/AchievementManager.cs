@@ -35,7 +35,17 @@ namespace Kazuro.Editor.Achievement
                 return instance;
             }
         }
-        public AchievementDataManager DataManager { get { return dataManager; } }
+        public AchievementDataManager DataManager
+        {
+            get
+            {
+                if (dataManager == null)
+                {
+                    dataManager = new AchievementDataManager();
+                }
+                return dataManager;
+            }
+        }
 
 
         //Editor‹N“®‚É“Ç‚İ‚İ
@@ -203,7 +213,7 @@ namespace Kazuro.Editor.Achievement
         [MenuItem("Achievement/View")]
         public static void View()
         {
-            Instance.dataManager.PrintInformation();
+            Instance.DataManager.PrintInformation();
         }
 
         [MenuItem("Achievement/Reload")]
