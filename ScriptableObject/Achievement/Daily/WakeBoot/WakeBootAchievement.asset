@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e536aac5434931c48ba085ff4a3b3a77, type: 3}
-  m_Name: test
+  m_Name: WakeBootAchievement
   m_EditorClassIdentifier: 
-  achievementName: test
-  achievementDescription: 0.1hour achievement
+  achievementName: "\u4E00\u65E5\u306E\u59CB\u307E\u308A"
+  achievementDescription: "\u4ECA\u65E5\u521D\u3081\u3066Editor\u3092\u8D77\u52D5\u3059\u308B"
   dayCategory: 0
-  notAchievementIcon: {fileID: 2800000, guid: 30eec088cb0478b4c8b62e9be5485a20, type: 3}
-  icon: {fileID: 2800000, guid: 30eec088cb0478b4c8b62e9be5485a20, type: 3}
+  notAchievementIcon: {fileID: 2800000, guid: 68dadc90cef765746bd2282c1ddbbcc2, type: 3}
+  icon: {fileID: 2800000, guid: 4232950e5fa36434d96cef31853f14e9, type: 3}
   isHide: 0
   achievementCondition:
-  - {fileID: 11400000, guid: cc7d5ce9b4818314fb2f61e263a67b5a, type: 2}
+  - {fileID: 11400000, guid: 093eabaa685914945bef57e37823ccb8, type: 2}

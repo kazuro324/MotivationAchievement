@@ -9,10 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 011cad6bc46362a4e8ecd1b9ce07de19, type: 3}
-  m_Name: 3hour
+  m_Script: {fileID: 11500000, guid: 7ef42a979140582408e46576366d77c2, type: 3}
+  m_Name: BootCondition
   m_EditorClassIdentifier: 
   dayCategory: 0
-  second: 0
-  minute: 0
-  hour: 5
+  targetBootCount: 1
