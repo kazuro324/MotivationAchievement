@@ -114,7 +114,7 @@ namespace Kazuro.Editor.Achievement
 
         public void TemporarySaveData()
         {
-            TempData tempData = new TempData(CurrentBuildCount, PlayCount, (uint)EditorApplication.timeSinceStartup);
+            tempData.currentWorkTime = (uint)EditorApplication.timeSinceStartup;
 
             AchievementUserDataLoader.TemporarySaveData(tempData);
         }
