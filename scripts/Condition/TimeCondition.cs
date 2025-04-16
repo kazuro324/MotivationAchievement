@@ -54,7 +54,7 @@ namespace Kazuro.Editor.Achievement
         }
     }
 
-    [CreateAssetMenu(menuName = "Kazuro/Editor/Achievement/Time Condition"), Icon("Assets/Editor/scripts/Condition/Icons/TimeCondition.png")]
+    [CreateAssetMenu(menuName = "Kazuro/Editor/Achievement/Condition/Time Condition"), Icon("Assets/Editor/scripts/Condition/Icons/TimeCondition.png")]
     public class TimeCondition : AchievementCondition
     {
         [SerializeField] private DayCategoryType dayCategory;
@@ -92,7 +92,7 @@ namespace Kazuro.Editor.Achievement
             {
                 return (uint)(value < timeHolder.ToHours() ? 0 : 1);
             }
-            return value;
+            return (uint)Mathf.Clamp(value, 0, GetMaxConditionCount(data));
         }
 
         public override uint GetMaxConditionCount(AchievementDataManager data)

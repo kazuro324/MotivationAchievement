@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Kazuro.Editor.Achievement
 {
-    [CreateAssetMenu(menuName = "Kazuro/Editor/Achievement/Boot Condition")]
+    [CreateAssetMenu(menuName = "Kazuro/Editor/Achievement/Condition/Boot Condition"), Icon("Assets/Editor/scripts/Condition/Icons/BootCondition.png")]
     public class BootCondition : AchievementCondition
     {
         [SerializeField] private DayCategoryType dayCategory;
@@ -11,32 +11,41 @@ namespace Kazuro.Editor.Achievement
 
         public override uint GetCurrentConditionCount(AchievementDataManager data)
         {
-            if (isProgressCountAtOnce)
-            {
-                return 1;
-            }
+            uint currentCount = 0;
+
             switch (dayCategory)
             {
                 case DayCategoryType.CurrentSession:
-                    return 1;
+                    currentCount = 1;
+                    break;
 
                 case DayCategoryType.Daily:
-                    return data.TodayBootCount;
+                    currentCount = data.TodayBootCount;
+                    break;
 
                 case DayCategoryType.Weekly:
-                    return data.WeekBootDays;
+                    currentCount = data.WeekBootDays;
+                    break;
 
                 case DayCategoryType.Total:
-                    return data.TotalBootCount;
+                    currentCount = data.TotalBootCount;
+                    break;
 
                 default:
-                    return 0;
+                    currentCount = 0;
+                    break;
             }
+
+            if (isProgressCountAtOnce)
+            {
+                return (uint)(currentCount < targetBootCount ? 0 : 1);
+            }
+            return (uint)Mathf.Clamp(currentCount, 0, GetMaxConditionCount(data));
         }
 
         public override uint GetMaxConditionCount(AchievementDataManager data)
         {
-            return targetBootCount;
+            return isProgressCountAtOnce ? 1 : targetBootCount;
         }
 
         public override bool IsAchieved(AchievementDataManager data)

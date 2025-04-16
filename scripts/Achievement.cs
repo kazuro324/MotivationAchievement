@@ -38,10 +38,7 @@ namespace Kazuro.Editor.Achievement
             int count = 0;
             foreach (var condition in achievementCondition)
             {
-                if (condition.IsAchieved(data))
-                {
-                    count += (int)condition.GetCurrentConditionCount(data);
-                }
+                count += (int)condition.GetCurrentConditionCount(data);
             }
             return count;
         }

@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace Kazuro.Editor.Achievement
 {
+    [CreateAssetMenu(menuName = "Kazuro/Editor/Achievement/Condition/Compile Condition"), Icon("Assets/Editor/scripts/Condition/Icons/CompileCondition.png")]
     public class CompileCondition : AchievementCondition
     {
         [SerializeField] private DayCategoryType dayCategory;
@@ -36,7 +37,7 @@ namespace Kazuro.Editor.Achievement
             {
                 return (uint)(currentCount < targetCount ? 0 : 1);
             }
-            return currentCount;
+            return (uint)Mathf.Clamp(currentCount, 0, GetMaxConditionCount(data));
         }
 
         public override uint GetMaxConditionCount(AchievementDataManager data)

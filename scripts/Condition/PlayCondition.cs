@@ -6,7 +6,7 @@ using UnityEngine;
 ///</summary>
 namespace Kazuro.Editor.Achievement
 {
-    [CreateAssetMenu(menuName = "Kazuro/Editor/Achievement/Play Condition"), Icon("Assets/Editor/scripts/Condition/Icons/PlayCondition.png")]
+    [CreateAssetMenu(menuName = "Kazuro/Editor/Achievement/Condition/Play Condition"), Icon("Assets/Editor/scripts/Condition/Icons/PlayCondition.png")]
     public class PlayCondition : AchievementCondition
     {
         [SerializeField] private DayCategoryType dayCategory;
@@ -44,7 +44,7 @@ namespace Kazuro.Editor.Achievement
             {
                 return (uint)(currentCount < playCount ? 0 : 1);
             }
-            return currentCount;
+            return (uint)Mathf.Clamp(currentCount, 0, GetMaxConditionCount(data));
         }
 
         public override uint GetMaxConditionCount(AchievementDataManager data)

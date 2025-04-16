@@ -1,3 +1,4 @@
+using Codice.Client.BaseCommands;
 using System;
 using UnityEditor;
 using UnityEngine;
@@ -7,7 +8,7 @@ using UnityEngine;
 ///</summary>
 namespace Kazuro.Editor.Achievement
 {
-    [CreateAssetMenu(menuName = "Kazuro/Editor/Achievement/TimeZone Condition")]
+    [CreateAssetMenu(menuName = "Kazuro/Editor/Achievement/Condition/TimeZone Condition"), Icon("Assets/Editor/scripts/Condition/Icons/TimeZoneCondition.png")]
     public class TimeZoneCondition : AchievementCondition
     {
         [Header("äJénéûä‘")]
@@ -28,18 +29,20 @@ namespace Kazuro.Editor.Achievement
 
         public override bool IsAchieved(AchievementDataManager data)
         {
-            if (progressTime.Hour > DateTime.Now.Hour &&
-                progressTime.Minute > DateTime.Now.Minute &&
-                progressTime.Second > DateTime.Now.Second)
+            DateTime startDate = startTime.CreateDate();
+            DateTime afterTime = startDate.AddSeconds(progressTime.ToSeconds());
+
+            TimeSpan afterDifference = afterTime - DateTime.Now;
+            //ç∑Çå©ÇƒÇŸÇµÇ¢Ç≈Ç∑ÇÀÇÕÇ¢
+            if (afterDifference.TotalSeconds < 0)
             {
                 return false;
             }
 
-            DateTime beforeTime = DateTime.Now.AddSeconds(EditorApplication.timeSinceStartup);
+            DateTime beforeDate = DateTime.Now.AddSeconds(EditorApplication.timeSinceStartup);
 
-            if (startTime.Hour > beforeTime.Hour &&
-                startTime.Minute > beforeTime.Minute &&
-                startTime.Second > beforeTime.Second)
+            TimeSpan beforeDifference = startDate - beforeDate;
+            if (beforeDifference.TotalSeconds > 0)
             {
                 return false;
             }

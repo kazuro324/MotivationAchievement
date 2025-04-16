@@ -5,7 +5,7 @@ using UnityEngine;
 ///</summary>
 namespace Kazuro.Editor.Achievement
 {
-    [CreateAssetMenu(menuName = "Kazuro/Editor/Achievement/DateContinue Condition"), Icon("Assets/Editor/scripts/Condition/Icons/DateContinueCondition.png")]
+    [CreateAssetMenu(menuName = "Kazuro/Editor/Achievement/Condition/DateContinue Condition"), Icon("Assets/Editor/scripts/Condition/Icons/DateContinueCondition.png")]
     public class DateContinueCondition : AchievementCondition
     {
         private enum ContinueDateType
@@ -17,6 +17,7 @@ namespace Kazuro.Editor.Achievement
 
         [SerializeField] private ContinueDateType continueDateType;
         [SerializeField] uint targetContinueDay;
+        [SerializeField] private bool isProgressCountAtOnce;
 
         public override bool IsAchieved(AchievementDataManager data)
         {
@@ -34,25 +35,36 @@ namespace Kazuro.Editor.Achievement
             }
         }
 
-        public override uint GetMaxConditionCount(AchievementDataManager data)
-        {
-            return targetContinueDay;
-        }
-
         public override uint GetCurrentConditionCount(AchievementDataManager data)
         {
+            uint currentCount = 0;
+
             switch (continueDateType)
             {
                 default:
                 case ContinueDateType.Current:
-                    return data.CurrentContinueDays;
+                    currentCount = data.CurrentContinueDays;
+                    break;
 
                 case ContinueDateType.Week:
-                    return data.WeekContinueDays;
+                    currentCount = data.WeekContinueDays;
+                    break;
 
                 case ContinueDateType.Highest:
-                    return data.HighestContinueDays;
+                    currentCount = data.HighestContinueDays;
+                    break;
             }
+
+            if (isProgressCountAtOnce)
+            {
+                return (uint)(currentCount < targetContinueDay ? 0 : 1);
+            }
+            return (uint)Mathf.Clamp(currentCount, 0, GetMaxConditionCount(data));
+        }
+
+        public override uint GetMaxConditionCount(AchievementDataManager data)
+        {
+            return isProgressCountAtOnce ? 1 : targetContinueDay;
         }
     }
 }

@@ -100,7 +100,7 @@ namespace Kazuro.Editor.Achievement
                 }
             }
 
-            Debug.Log($"ÀÑ‚ğ“Ç‚İ‚İ‚Ü‚µ‚½B“o˜^ÀÑ”: {count}’† {Instance.AchievementCount}");
+            Debug.Log($"ÀÑ‚ğ“Ç‚İ‚İ‚Ü‚µ‚½B“o˜^ÀÑ”: {Instance.AchievementCount}ŒÂ’†{count}");
 
         }
 

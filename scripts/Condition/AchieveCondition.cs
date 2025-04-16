@@ -5,7 +5,7 @@ using UnityEngine;
 ////</summary>
 namespace Kazuro.Editor.Achievement
 {
-    [CreateAssetMenu(menuName = "Kazuro/Editor/Achievement/Achieve Condition")]
+    [CreateAssetMenu(menuName = "Kazuro/Editor/Achievement/Condition/Achieve Condition"), Icon("Assets/Editor/scripts/Condition/Icons/AchieveCondition.png")]
     public class AchieveCondition : AchievementCondition
     {
         [SerializeField] private AchievementCondition[] conditions;

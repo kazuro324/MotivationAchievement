@@ -6,10 +6,11 @@ namespace Kazuro.Editor.Achievement
     /// <summary>
     /// éwíËéûä‘ë—Ç…ãNìÆÇµÇƒÇ¢ÇÈÇ∆íBê¨
     /// </summary>
+    [CreateAssetMenu(menuName = "Kazuro/Editor/Achievement/Condition/BootRangeTime Condition"), Icon("Assets/Editor/scripts/Condition/Icons/BootRangeTimeCondition.png")]
     public class BootRangeTimeCondition : AchievementCondition
     {
         [SerializeField] private TimeHolder startRangeTime;
-        [SerializeField] private TimeHolder endRangeTime;
+        [SerializeField] private TimeHolder betweenRangeTime;
 
         public override uint GetCurrentConditionCount(AchievementDataManager data)
         {
@@ -29,7 +30,7 @@ namespace Kazuro.Editor.Achievement
             }
             
             DateTime startDate = startRangeTime.CreateDate();
-            DateTime endDate = endRangeTime.CreateDate();
+            DateTime endDate = betweenRangeTime.CreateDate();
 
             if (DateTime.Now <= startDate)
             {
