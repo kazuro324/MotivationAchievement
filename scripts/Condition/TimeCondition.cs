@@ -10,21 +10,21 @@ namespace Kazuro.Editor.Achievement
     [System.Serializable]
     public struct TimeHolder
     {
-        public int year;
-        public byte month;
-        public byte day;
-        public byte hour;
-        public byte minute;
-        public byte second;
+        [SerializeField] private byte hour;
+        [SerializeField] private byte minute;
+        [SerializeField] private byte second;
+
+        public byte Hour { get { return hour; } }
+
+        public byte Minute { get { return minute; } }
+
+        public byte Second { get { return second; } }
 
         const int ONEHOUR = 3600;
         const int ONEMINUTE = 60;
 
-        public TimeHolder(int year,byte month,byte day,byte hour, byte minute, byte second)
+        public TimeHolder(byte hour, byte minute, byte second)
         {
-            this.year = year;
-            this.month = month;
-            this.day = day;
             this.hour = hour;
             this.minute = minute;
             this.second = second;
@@ -37,14 +37,14 @@ namespace Kazuro.Editor.Achievement
 
         public DateTime CreateDate()
         {
-            return new DateTime(
-                this.year,
-                this.month,
-                this.day,
-                this.hour,
-                this.minute,
-                this.second
+            DateTime tempTime = new DateTime(
+                DateTime.Now.Year,
+                DateTime.Now.Month,
+                DateTime.Now.Day
                 );
+
+            tempTime.AddSeconds(ToSeconds());
+            return tempTime;
         }
 
         public static TimeHolder operator +(TimeHolder a, TimeHolder b)

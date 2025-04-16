@@ -18,12 +18,18 @@ namespace Kazuro.Editor.Achievement
 
         public override bool IsAchieved(AchievementDataManager data)
         {
-            if (progressTime.CreateDate() > DateTime.Now)
+            if (progressTime.Hour > DateTime.Now.Hour &&
+                progressTime.Minute > DateTime.Now.Minute &&
+                progressTime.Second > DateTime.Now.Second)
             {
                 return false;
             }
-            
-            if (startTime.CreateDate() > DateTime.Now.AddSeconds(EditorApplication.timeSinceStartup))
+
+            DateTime beforeTime = DateTime.Now.AddSeconds(EditorApplication.timeSinceStartup);
+
+            if (startTime.Hour > beforeTime.Hour &&
+                startTime.Minute > beforeTime.Minute &&
+                startTime.Second > beforeTime.Second)
             {
                 return false;
             }

@@ -4,10 +4,10 @@ namespace Kazuro.Editor.Achievement
 {
     public enum DayCategoryType
     {
-        CurrentSession,
-        Daily,
-        Weekly,
-        Total
+        CurrentSession = 3,
+        Daily = 0,
+        Weekly = 1,
+        Total = 2
     }
 
     [CreateAssetMenu(menuName = "Kazuro/Editor/Achievement/AchievementFile")]

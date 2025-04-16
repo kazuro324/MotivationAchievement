@@ -9,8 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d270e7d488103c8479ed64c3b41c0ed1, type: 3}
-  m_Name: BootCondition
+  m_Script: {fileID: 11500000, guid: 39c2e8451e62a304e8167eb77bdc5587, type: 3}
+  m_Name: 5-8timezone
   m_EditorClassIdentifier: 
-  dayCategory: 1
-  targetBootCount: 1
+  startTime:
+    hour: 5
+    minute: 0
+    second: 0
+  progressTime:
+    hour: 3
+    minute: 0
+    second: 0
