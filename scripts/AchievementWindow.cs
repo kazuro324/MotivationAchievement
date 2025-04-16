@@ -105,7 +105,7 @@ namespace Kazuro.Editor.Achievement
 
             //êiíªï\é¶
             int currentAchieved = achievement.GetConditionAchievedCount(AchievementManager.Instance.DataManager);
-            int maxAchieved = achievement.AllConditionCount;
+            int maxAchieved = achievement.AllConditionCount(AchievementManager.Instance.DataManager);
             var achieveProgressBar = informationContainer.Q<ProgressBar>("SatisfiedProgressBar");
             achieveProgressBar.lowValue = 0;
             achieveProgressBar.highValue = maxAchieved;

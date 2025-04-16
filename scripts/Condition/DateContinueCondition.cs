@@ -16,7 +16,7 @@ namespace Kazuro.Editor.Achievement
         }
 
         [SerializeField] private ContinueDateType continueDateType;
-        [SerializeField] int targetContinueDay;
+        [SerializeField] uint targetContinueDay;
 
         public override bool IsAchieved(AchievementDataManager data)
         {
@@ -31,6 +31,27 @@ namespace Kazuro.Editor.Achievement
 
                 case ContinueDateType.Highest:
                     return data.HighestContinueDays > targetContinueDay;
+            }
+        }
+
+        public override uint GetMaxConditionCount(AchievementDataManager data)
+        {
+            return targetContinueDay;
+        }
+
+        public override uint GetCurrentConditionCount(AchievementDataManager data)
+        {
+            switch (continueDateType)
+            {
+                default:
+                case ContinueDateType.Current:
+                    return data.CurrentContinueDays;
+
+                case ContinueDateType.Week:
+                    return data.WeekContinueDays;
+
+                case ContinueDateType.Highest:
+                    return data.HighestContinueDays;
             }
         }
     }

@@ -6,12 +6,12 @@ namespace Kazuro.Editor.Achievement
 {
     public struct TempData
     {
-        public int buildCount;
-        public int playCount;
+        public uint buildCount;
+        public uint playCount;
         public uint currentWorkTime;
         public uint currentCompileCount;
 
-        public TempData(int buildCount, int playCount, uint currentWorkTime, uint currentCompileCount)
+        public TempData(uint buildCount, uint playCount, uint currentWorkTime, uint currentCompileCount)
         {
             this.buildCount = buildCount;
             this.playCount = playCount;
@@ -37,26 +37,26 @@ namespace Kazuro.Editor.Achievement
 
         public uint todayCompileCount;
         public uint currentWorkTime;
-        public int todayPlayCount;
+        public uint todayPlayCount;
         public uint todayWorkTime;
-        public int todayBootCount;
-        public int todayBuildCount;
+        public uint todayBootCount;
+        public uint todayBuildCount;
 
         public uint weekCompileCount;
         public uint weekWorkTime;
-        public int weekBuildCount;
-        public int weekPlayModeCount;
-        public int weekBootCount;
-        public int weekBootDays;
+        public uint weekBuildCount;
+        public uint weekPlayModeCount;
+        public uint weekBootCount;
+        public uint weekBootDays;
         public uint weekContinueFirstDays;
 
         public uint highestContinueDays;
         public uint totalCompileCount;
         public uint totalWorkTime;
-        public int totalBuildCount;
-        public int totalPlayModeCount;
-        public int totalBootCount;
-        public int totalBootDays;
+        public uint totalBuildCount;
+        public uint totalPlayModeCount;
+        public uint totalBootCount;
+        public uint totalBootDays;
 
         public DateTime FirstOpenDate { get { return ArrayToDate(firstOpenDateArray); } }
         public DateTime LastOpenDate { get { return ArrayToDate(lastOpenDate); } }
@@ -127,17 +127,17 @@ namespace Kazuro.Editor.Achievement
 
         public uint TodayWorkTime { get { return loadedData.todayWorkTime; } }
 
-        public int TodayPlayCount { get { return loadedData.todayPlayCount; } }
+        public uint TodayPlayCount { get { return loadedData.todayPlayCount; } }
 
-        public int TodayBuildCount { get { return loadedData.todayBuildCount; } }
+        public uint TodayBuildCount { get { return loadedData.todayBuildCount; } }
 
         public uint TodayCompileCount { get { return loadedData.totalCompileCount; } }
 
-        public int PlayCount { get { return tempData.playCount; } }
+        public uint PlayCount { get { return tempData.playCount; } }
 
         public uint CurrentCompileCount { get { return tempData.currentCompileCount; } }
 
-        public int CurrentBuildCount { get { return tempData.buildCount; } }
+        public uint CurrentBuildCount { get { return tempData.buildCount; } }
 
         public DateTime FirstStartDate { get { return loadedData.FirstOpenDate; } }
         public DateTime LastOpenDate { get { return loadedData.LastOpenDate; } }
@@ -147,22 +147,22 @@ namespace Kazuro.Editor.Achievement
         public uint WeekCompileCount { get { return loadedData.weekCompileCount; } }
 
         public uint WeekWorkTime { get { return loadedData.weekWorkTime; } }
-        public int WeekPlayCount { get { return loadedData.weekPlayModeCount; } }
-        public int WeekBuildCount { get { return loadedData.weekBuildCount; } }
-        public int WeekBootCount { get { return loadedData.weekBootCount; } }
+        public uint WeekPlayCount { get { return loadedData.weekPlayModeCount; } }
+        public uint WeekBuildCount { get { return loadedData.weekBuildCount; } }
+        public uint WeekBootCount { get { return loadedData.weekBootCount; } }
 
-        public int WeekBootDays { get { return loadedData.weekBootDays; } }
+        public uint WeekBootDays { get { return loadedData.weekBootDays; } }
 
         public uint WeekContinueDays { get { return loadedData.currentContinueDays - loadedData.weekContinueFirstDays; } }
 
         public uint TotalCompileCount { get { return loadedData.totalCompileCount; } }
 
-        public int TotalBuildCount { get { return loadedData.totalBuildCount; } }
+        public uint TotalBuildCount { get { return loadedData.totalBuildCount; } }
 
-        public int TotalBootCount { get { return loadedData.totalBootCount; } }
-        public int TodayBootCount { get { return loadedData.todayBootCount; } }
+        public uint TotalBootCount { get { return loadedData.totalBootCount; } }
+        public uint TodayBootCount { get { return loadedData.todayBootCount; } }
 
-        public int TotalPlayCount { get { return loadedData.totalPlayModeCount; } }
+        public uint TotalPlayCount { get { return loadedData.totalPlayModeCount; } }
 
         public uint TotalWorkTime { get { return loadedData.totalWorkTime; } }
 

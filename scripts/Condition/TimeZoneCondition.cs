@@ -16,6 +16,16 @@ namespace Kazuro.Editor.Achievement
         [Header("I—¹ŽžŠÔ")]
         [SerializeField] private TimeHolder progressTime;
 
+        public override uint GetCurrentConditionCount(AchievementDataManager data)
+        {
+            return (uint)(IsAchieved(data) ? 1 : 0);
+        }
+
+        public override uint GetMaxConditionCount(AchievementDataManager data)
+        {
+            return 1;
+        }
+
         public override bool IsAchieved(AchievementDataManager data)
         {
             if (progressTime.Hour > DateTime.Now.Hour &&

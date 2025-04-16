@@ -11,6 +11,16 @@ namespace Kazuro.Editor.Achievement
         [SerializeField] private TimeHolder startRangeTime;
         [SerializeField] private TimeHolder endRangeTime;
 
+        public override uint GetCurrentConditionCount(AchievementDataManager data)
+        {
+            return (uint)(IsAchieved(data) ? 1 : 0);
+        }
+
+        public override uint GetMaxConditionCount(AchievementDataManager data)
+        {
+            return 1;
+        }
+
         public override bool IsAchieved(AchievementDataManager data)
         {
             if (data.TodayBootCount < 1)

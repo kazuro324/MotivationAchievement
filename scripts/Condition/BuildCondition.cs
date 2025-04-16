@@ -10,7 +10,47 @@ namespace Kazuro.Editor.Achievement
     public class BuildCondition : AchievementCondition
     {
         [SerializeField] private DayCategoryType dayCategory;
-        [SerializeField] private byte targetBuildCount;
+        [SerializeField] private uint targetBuildCount;
+        [SerializeField] private bool isProgressCountAtOnce;
+
+        public override uint GetCurrentConditionCount(AchievementDataManager data)
+        {
+            uint currentCount = 0;
+
+            switch (dayCategory)
+            {
+                case DayCategoryType.CurrentSession:
+                    currentCount = data.CurrentBuildCount;
+                    break;
+
+                case DayCategoryType.Daily:
+                    currentCount = data.TodayBuildCount;
+                    break;
+
+                case DayCategoryType.Weekly:
+                    currentCount = data.WeekBuildCount;
+                    break;
+
+                case DayCategoryType.Total:
+                    currentCount = data.TotalBuildCount;
+                    break;
+
+                default:
+                    return 0;
+            }
+
+            if (isProgressCountAtOnce)
+            {
+                return (uint)(currentCount < targetBuildCount ? 0 : 1);
+            }
+            return currentCount;
+        }
+
+        public override uint GetMaxConditionCount(AchievementDataManager data)
+        {
+            return isProgressCountAtOnce ? 1 : targetBuildCount;
+        }
+
         public override bool IsAchieved(AchievementDataManager data)
         {
             switch (dayCategory)

@@ -40,8 +40,18 @@ namespace Kazuro.Editor.Achievement
             {
                 if (condition.IsAchieved(data))
                 {
-                    count++;
+                    count += (int)condition.GetCurrentConditionCount(data);
                 }
+            }
+            return count;
+        }
+
+        public int AllConditionCount(AchievementDataManager data)
+        {
+            int count = 0;
+            foreach (var condition in achievementCondition)
+            {
+                count += (int)condition.GetMaxConditionCount(data);
             }
             return count;
         }
@@ -51,8 +61,6 @@ namespace Kazuro.Editor.Achievement
         public string AchievementName { get { return achievementName; } }
 
         public string AchievementDescription { get { return achievementDescription; } }
-
-        public int AllConditionCount {  get { return achievementCondition.Length; } }
 
         public Texture2D Icon { get { return icon; } }
 
