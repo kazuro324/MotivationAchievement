@@ -10,7 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9afebf035e6a1bb44a9a56e7fe8e77d4, type: 3}
-  m_Name: 3buiild
+  m_Name: 10buiild
   m_EditorClassIdentifier: 
   dayCategory: 0
-  targetBuildCount: 3
+  targetBuildCount: 10
+  isProgressCountAtOnce: 0
