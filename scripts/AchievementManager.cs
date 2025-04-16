@@ -85,7 +85,7 @@ namespace Kazuro.Editor.Achievement
                 //IsAllAchieved“à‚Å‚Ì—áŠO‚ð•ß‘¨
                 try
                 {
-                    if (!achievement.IsAllAchieved(Instance.dataManager))
+                    if (!achievement.IsAllAchieved(Instance.DataManager))
                     {
                         Instance.noAchievements.Add(achievement);
                     }
@@ -119,8 +119,8 @@ namespace Kazuro.Editor.Achievement
         private void StartCompile(object obj)
         {
             EndClass();
-            dataManager.TemporarySaveData();
-            dataManager.SaveData();
+            DataManager.TemporarySaveData();
+            DataManager.SaveData();
         }
 
         public bool IsAchieved(Achievement achievement)
