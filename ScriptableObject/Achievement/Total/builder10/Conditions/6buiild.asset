@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1e9909edf62c9ba4186845a64de4da50, type: 3}
+  m_Script: {fileID: 11500000, guid: 9afebf035e6a1bb44a9a56e7fe8e77d4, type: 3}
   m_Name: 6buiild
   m_EditorClassIdentifier: 
-  dayCategory: 3
+  dayCategory: 0
   targetBuildCount: 6
