@@ -1,4 +1,5 @@
 using System;
+using UnityEditor;
 using UnityEngine;
 
 ///<summary>
@@ -6,48 +7,27 @@ using UnityEngine;
 ///</summary>
 namespace Kazuro.Editor.Achievement
 {
+    [CreateAssetMenu(menuName = "Kazuro/Editor/Achievement/TimeZone Condition")]
     public class TimeZoneCondition : AchievementCondition
     {
         [Header("äJénéûä‘")]
-        [SerializeField] private byte zoneFirstHour;
-        [SerializeField] private byte zoneFirstMinute;
-        [SerializeField] private byte zoneFirstSecond;
+        [SerializeField] private TimeHolder startTime;
 
         [Header("èIóπéûä‘")]
-        [SerializeField] private byte zoneEndHour;
-        [SerializeField] private byte zoneEndMinute;
-        [SerializeField] private byte zoneEndSecond;
-
-        const double Minutes60 = 60f;
+        [SerializeField] private TimeHolder progressTime;
 
         public override bool IsAchieved(AchievementDataManager data)
         {
-            var startDate = DateToHourDouble(data.FirstStartDate);
-            var startZoneDate = DateToHourDouble(zoneFirstSecond, zoneFirstMinute, zoneFirstSecond);
-            var currentDate = DateToHourDouble(DateTime.Now);
-            var endZoneDate = DateToHourDouble(zoneEndHour, zoneEndMinute, zoneEndSecond);
-            if (startDate <= startZoneDate && currentDate >= endZoneDate)
+            if (progressTime.CreateDate() > DateTime.Now)
             {
-                return true;
+                return false;
             }
-            return false;
-        }
-
-        private double DateToHourDouble(DateTime date)
-        {
-            var hour = date.Hour;
-            var minutes = date.Minute / Minutes60;
-            var seconds = (date.Second / Minutes60) / Minutes60;
-            return hour * minutes + seconds;
-        }
-
-        private double DateToHourDouble(byte dHour, byte dMinute, byte dSecond)
-        {
-            var hour = dHour;
-            var minutes = dMinute / Minutes60;
-            var seconds = (dSecond / Minutes60) / Minutes60;
-            return hour * minutes + seconds;
+            
+            if (startTime.CreateDate() > DateTime.Now.AddSeconds(EditorApplication.timeSinceStartup))
+            {
+                return false;
+            }
+            return true;
         }
     }
-
 }
