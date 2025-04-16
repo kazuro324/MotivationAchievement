@@ -67,13 +67,12 @@ namespace Kazuro.Editor.Achievement
             CompilationPipeline.compilationStarted += Instance.StartCompile;
             Instance.OnUpdate += Instance.CheckClaimAchieved;
 
-            Debug.Log($"é¿ê—Çì«Ç›çûÇ›Ç‹ÇµÇΩÅBìoò^é¿ê—êî: {Instance.AchievementCount}");
-
             Instance.UpdateAsync(token);
         }
 
         private void CheckAchieved()
         {
+            int count = 0;
             foreach (var achievement in Instance.dataBase.Achievements)
             {
                 if (achievement == null)
@@ -88,6 +87,7 @@ namespace Kazuro.Editor.Achievement
                     if (!achievement.IsAllAchieved(Instance.DataManager))
                     {
                         Instance.noAchievements.Add(achievement);
+                        count++;
                     }
                 }
                 catch (NullReferenceException nre)
@@ -99,6 +99,9 @@ namespace Kazuro.Editor.Achievement
                     Debug.LogError($"Achievement '{achievement.name}' Ç≈ó·äOÇ™î≠ê∂ÇµÇ‹ÇµÇΩ: {ex.Message}");
                 }
             }
+
+            Debug.Log($"é¿ê—Çì«Ç›çûÇ›Ç‹ÇµÇΩÅBìoò^é¿ê—êî: {count}íÜ {Instance.AchievementCount}");
+
         }
 
         private async void UpdateAsync(CancellationToken token)
