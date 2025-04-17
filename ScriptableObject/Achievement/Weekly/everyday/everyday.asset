@@ -20,9 +20,3 @@ MonoBehaviour:
   isHide: 0
   achievementCondition:
   - {fileID: 11400000, guid: 90c95c3683dcb2945a0b3f0a44202c2f, type: 2}
-  - {fileID: 11400000, guid: 61216a2e7b8d8774ba93c7be30f2b9bd, type: 2}
-  - {fileID: 11400000, guid: 9dd452854e582154e8fced007fdc3402, type: 2}
-  - {fileID: 11400000, guid: b0445dbb542ae4e41bbf62419581498c, type: 2}
-  - {fileID: 11400000, guid: 6248bf943727078418680f625669c21a, type: 2}
-  - {fileID: 11400000, guid: 65e4ee2febfc31d4f9d371e978760b1e, type: 2}
-  - {fileID: 11400000, guid: 0b171f6e281ecd54e888854c76c4ad0b, type: 2}

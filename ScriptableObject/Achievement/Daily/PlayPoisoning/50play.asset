@@ -9,8 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ffa38789f659ec244b4c75ef6e39bc8f, type: 3}
+  m_Script: {fileID: 11500000, guid: ab26b68c7c8eaab4697b4ac34297d175, type: 3}
   m_Name: 50play
   m_EditorClassIdentifier: 
   dayCategory: 0
   playCount: 50
+  isProgressCountAtOnce: 0

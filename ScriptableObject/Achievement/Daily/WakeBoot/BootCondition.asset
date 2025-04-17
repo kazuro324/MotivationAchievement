@@ -9,8 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ef42a979140582408e46576366d77c2, type: 3}
+  m_Script: {fileID: 11500000, guid: d270e7d488103c8479ed64c3b41c0ed1, type: 3}
   m_Name: BootCondition
   m_EditorClassIdentifier: 
   dayCategory: 0
   targetBootCount: 1
+  isProgressCountAtOnce: 0
