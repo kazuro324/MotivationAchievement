@@ -52,6 +52,8 @@ namespace Kazuro.Editor.Achievement
         [InitializeOnLoadMethod]
         private static void InitializeInstance()
         {
+            AssetDatabase.Refresh();
+
             if (Instance.dataBase == null)
             {
                 Debug.LogWarning("AchievementDataBaseÇ™ê›íËÇ≥ÇÍÇƒÇ¢Ç‹ÇπÇÒÅB");
@@ -87,8 +89,8 @@ namespace Kazuro.Editor.Achievement
                     if (!achievement.IsAllAchieved(Instance.DataManager))
                     {
                         Instance.noAchievements.Add(achievement);
-                        count++;
                     }
+                    count++;
                 }
                 catch (NullReferenceException nre)
                 {
@@ -109,7 +111,7 @@ namespace Kazuro.Editor.Achievement
             while (!token.IsCancellationRequested)
             {
                 OnUpdate?.Invoke();
-                await Task.Delay(1000, token);
+                await Task.Delay(2000, token);
             }
         }
 

@@ -32,17 +32,18 @@ namespace Kazuro.Editor.Achievement
             DateTime startDate = startTime.CreateDate();
             DateTime afterTime = startDate.AddSeconds(progressTime.ToSeconds());
 
-            TimeSpan afterDifference = afterTime - DateTime.Now;
-            //ç∑Çå©ÇƒÇŸÇµÇ¢Ç≈Ç∑ÇÀÇÕÇ¢
+            TimeSpan afterDifference = DateTime.Now - afterTime;
+            
             if (afterDifference.TotalSeconds < 0)
             {
                 return false;
             }
 
-            DateTime beforeDate = DateTime.Now.AddSeconds(EditorApplication.timeSinceStartup);
+            DateTime beforeDate = DateTime.Now.AddSeconds(-EditorApplication.timeSinceStartup);
 
-            TimeSpan beforeDifference = startDate - beforeDate;
-            if (beforeDifference.TotalSeconds > 0)
+            TimeSpan beforeDifference = beforeDate - startDate;
+
+            if (beforeDifference.TotalSeconds < 0)
             {
                 return false;
             }
