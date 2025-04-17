@@ -1,9 +1,1 @@
-*.json
-/Save/*.meta
-/scripts/Condition/*.meta
-/scripts/Condition.meta
-/scripts/Achievement.cs.meta
-/scripts/AchievementDataBase.cs.meta
-/scripts/AchievementDataManager.cs.meta
-/scripts/AchievementUserDataLoader.cs.meta
-/*.meta
+/Save
