@@ -24,6 +24,28 @@ namespace Kazuro.Editor.Achievement
         const int ONEHOUR = 3600;
         const int ONEMINUTE = 60;
 
+        public TimeHolder(uint seconds)
+        {
+            byte sec = (byte)(seconds % ONEMINUTE);
+            var minute = (byte)(seconds / ONEMINUTE);
+            var min = (byte)(minute % ONEMINUTE);
+            var hour = (byte)(minute / ONEMINUTE);
+            this.hour = hour;
+            this.minute = min;
+            this.second = sec;
+        }
+
+        public TimeHolder(int seconds)
+        {
+            byte sec = (byte)(seconds % ONEMINUTE);
+            var minute = (byte)(seconds / ONEMINUTE);
+            var min = (byte)(minute % ONEMINUTE);
+            var hour = (byte)(minute / ONEMINUTE);
+            this.hour = hour;
+            this.minute = min;
+            this.second = sec;
+        }
+
         public TimeHolder(byte hour, byte minute, byte second)
         {
             this.hour = hour;
@@ -34,6 +56,11 @@ namespace Kazuro.Editor.Achievement
         public int ToSeconds()
         {
             return (hour * ONEHOUR) + (minute * ONEMINUTE) + second;
+        }
+
+        public int ToMinutes()
+        {
+            return (hour * ONEMINUTE) + minute + (second / ONEMINUTE);
         }
 
         public uint ToHours()

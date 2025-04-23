@@ -1,6 +1,10 @@
 using System;
+using System.Diagnostics;
+using System.IO;
+using System.Runtime.InteropServices;
 using UnityEditor;
 using UnityEditor.Compilation;
+using UnityEngine;
 
 namespace Kazuro.Editor.Achievement
 {
@@ -41,6 +45,7 @@ namespace Kazuro.Editor.Achievement
         public uint todayWorkTime;
         public uint todayBootCount;
         public uint todayBuildCount;
+        public uint todayFocusCodeEditorTime;
 
         public uint weekCompileCount;
         public uint weekWorkTime;
@@ -49,6 +54,7 @@ namespace Kazuro.Editor.Achievement
         public uint weekBootCount;
         public uint weekBootDays;
         public uint weekContinueFirstDays;
+        public uint weekFocusCodeEditorTime;
 
         public uint highestContinueDays;
         public uint totalCompileCount;
@@ -57,6 +63,7 @@ namespace Kazuro.Editor.Achievement
         public uint totalPlayModeCount;
         public uint totalBootCount;
         public uint totalBootDays;
+        public uint totalFocusCodeEditorTime;
 
         public DateTime FirstOpenDate { get { return ArrayToDate(firstOpenDateArray); } }
         public DateTime LastOpenDate { get { return ArrayToDate(lastOpenDate); } }
@@ -133,6 +140,8 @@ namespace Kazuro.Editor.Achievement
 
         public uint TodayCompileCount { get { return loadedData.totalCompileCount; } }
 
+        public uint TodayFocusCodeEditorTime { get { return loadedData.todayFocusCodeEditorTime;  } }
+
         public uint PlayCount { get { return tempData.playCount; } }
 
         public uint CurrentCompileCount { get { return tempData.currentCompileCount; } }
@@ -151,6 +160,9 @@ namespace Kazuro.Editor.Achievement
         public uint WeekBuildCount { get { return loadedData.weekBuildCount; } }
         public uint WeekBootCount { get { return loadedData.weekBootCount; } }
 
+        public uint WeekFocusCodeEditorTime { get { return loadedData.weekFocusCodeEditorTime; } }
+
+
         public uint WeekBootDays { get { return loadedData.weekBootDays; } }
 
         public uint WeekContinueDays { get { return loadedData.currentContinueDays - loadedData.weekContinueFirstDays; } }
@@ -166,12 +178,24 @@ namespace Kazuro.Editor.Achievement
 
         public uint TotalWorkTime { get { return loadedData.totalWorkTime; } }
 
+        public uint TotalFocusCodeEditorTime { get { return loadedData.totalFocusCodeEditorTime; } }
+
+
 
         public uint HighestContinueDays { get { return loadedData.highestContinueDays; } }
 
         private bool isBuilding = false;
 
         private bool isStartUp = true;
+
+        private double previousUpdateTime;
+
+        [DllImport("user32.dll")]
+        private static extern IntPtr GetForegroundWindow();
+
+        [DllImport("user32.dll")]
+        private static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
+
 
         public AchievementDataManager()
         {
@@ -221,6 +245,7 @@ namespace Kazuro.Editor.Achievement
                 }
             }
 
+            AchievementManager.Instance.OnUpdate += UpdateFocusCodeEditorCount;
             AchievementManager.Instance.OnUpdate += CountBuild;
             EditorApplication.playModeStateChanged += CountPlayMode;
             CompilationPipeline.compilationStarted += CountCompile;
@@ -309,6 +334,53 @@ namespace Kazuro.Editor.Achievement
             }
         }
 
+        private void UpdateFocusCodeEditorCount()
+        {
+            double focusTime = 0d;
+
+            if (CheckFocusCodeEditor())
+            {
+                focusTime = EditorApplication.timeSinceStartup;
+                focusTime -= previousUpdateTime;
+                loadedData.todayFocusCodeEditorTime += (uint)focusTime;
+                loadedData.weekFocusCodeEditorTime += (uint)focusTime;
+                loadedData.totalFocusCodeEditorTime += (uint)focusTime;
+                previousUpdateTime = EditorApplication.timeSinceStartup;
+            }
+        }
+
+        private bool CheckFocusCodeEditor()
+        {
+            string editorPath = EditorPrefs.GetString("kScriptsDefaultApp");
+            
+
+            if (string.IsNullOrEmpty(editorPath) || !File.Exists(editorPath))
+            {
+                return false;
+            }
+
+            string editorExeName = Path.GetFileNameWithoutExtension(editorPath);
+
+            IntPtr foregroundWindow = GetForegroundWindow();
+            if (foregroundWindow == IntPtr.Zero)
+            {
+                return false;
+            }
+
+            GetWindowThreadProcessId(foregroundWindow, out uint processId);
+
+            try
+            {
+                Process foregroundProcess = Process.GetProcessById((int)processId);
+                var editorName = foregroundProcess.ProcessName;
+                return String.Equals(editorName, editorExeName);
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public void PrintInformation()
         {
             UnityEngine.Debug.Log($"Work Time: {EditorApplication.timeSinceStartup} TotalWorkTime: {loadedData.totalWorkTime}");
@@ -316,10 +388,12 @@ namespace Kazuro.Editor.Achievement
             UnityEngine.Debug.Log($"Boot Today: {TodayBootCount} Boot Total: {TotalBootCount}");
             UnityEngine.Debug.Log($"LastOpenDay: {LastOpenDate} CurrentContinueDays: {CurrentContinueDays}");
             UnityEngine.Debug.Log($"Build: {CurrentBuildCount}");
+            UnityEngine.Debug.Log($"CodeEditor: {TodayFocusCodeEditorTime}");
         }
 
         public void Dispose()
         {
+            AchievementManager.Instance.OnUpdate -= UpdateFocusCodeEditorCount;
             AchievementManager.Instance.OnUpdate -= CountBuild;
             EditorApplication.playModeStateChanged -= CountPlayMode;
             CompilationPipeline.compilationStarted -= CountCompile;
