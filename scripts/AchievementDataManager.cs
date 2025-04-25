@@ -45,6 +45,7 @@ namespace Kazuro.Editor.Achievement
         public uint todayWorkTime;
         public uint todayBootCount;
         public uint todayBuildCount;
+        public uint todayFocusUnityEditorTime;
         public uint todayFocusCodeEditorTime;
 
         public uint weekCompileCount;
@@ -54,6 +55,7 @@ namespace Kazuro.Editor.Achievement
         public uint weekBootCount;
         public uint weekBootDays;
         public uint weekContinueFirstDays;
+        public uint weekFocusUnityEditorTime;
         public uint weekFocusCodeEditorTime;
 
         public uint highestContinueDays;
@@ -63,6 +65,7 @@ namespace Kazuro.Editor.Achievement
         public uint totalPlayModeCount;
         public uint totalBootCount;
         public uint totalBootDays;
+        public uint totalFocusUnityEditorTime;
         public uint totalFocusCodeEditorTime;
 
         public DateTime FirstOpenDate { get { return ArrayToDate(firstOpenDateArray); } }
@@ -140,6 +143,8 @@ namespace Kazuro.Editor.Achievement
 
         public uint TodayCompileCount { get { return loadedData.totalCompileCount; } }
 
+        public uint TodayFocusUnityEditorTime { get { return loadedData.todayFocusUnityEditorTime; } }
+
         public uint TodayFocusCodeEditorTime { get { return loadedData.todayFocusCodeEditorTime;  } }
 
         public uint PlayCount { get { return tempData.playCount; } }
@@ -160,6 +165,8 @@ namespace Kazuro.Editor.Achievement
         public uint WeekBuildCount { get { return loadedData.weekBuildCount; } }
         public uint WeekBootCount { get { return loadedData.weekBootCount; } }
 
+        public uint WeekFocusUnityEditorTime { get { return loadedData.weekFocusUnityEditorTime; } }
+
         public uint WeekFocusCodeEditorTime { get { return loadedData.weekFocusCodeEditorTime; } }
 
 
@@ -178,8 +185,9 @@ namespace Kazuro.Editor.Achievement
 
         public uint TotalWorkTime { get { return loadedData.totalWorkTime; } }
 
-        public uint TotalFocusCodeEditorTime { get { return loadedData.totalFocusCodeEditorTime; } }
+        public uint TotalFocusUnityEditorTime { get { return loadedData.totalFocusUnityEditorTime; } }
 
+        public uint TotalFocusCodeEditorTime { get { return loadedData.totalFocusCodeEditorTime; } }
 
 
         public uint HighestContinueDays { get { return loadedData.highestContinueDays; } }
@@ -188,7 +196,8 @@ namespace Kazuro.Editor.Achievement
 
         private bool isStartUp = true;
 
-        private double previousUpdateTime;
+        private double previousUnityEditorUpdateTime;
+        private double previousCodeEditorUpdateTime;
 
         [DllImport("user32.dll")]
         private static extern IntPtr GetForegroundWindow();
@@ -245,7 +254,7 @@ namespace Kazuro.Editor.Achievement
                 }
             }
 
-            AchievementManager.Instance.OnUpdate += UpdateFocusCodeEditorCount;
+            AchievementManager.Instance.OnUpdate += UpdateFocusEditorCount;
             AchievementManager.Instance.OnUpdate += CountBuild;
             EditorApplication.playModeStateChanged += CountPlayMode;
             CompilationPipeline.compilationStarted += CountCompile;
@@ -334,19 +343,35 @@ namespace Kazuro.Editor.Achievement
             }
         }
 
-        private void UpdateFocusCodeEditorCount()
+        private void UpdateFocusEditorCount()
         {
-            double focusTime = 0d;
+            double focusCodeEditorTime = 0d;
+            double focusUnityEditorTime = 0d;
+
+            if (CheckFocusUnityEditor())
+            {
+                focusUnityEditorTime = EditorApplication.timeSinceStartup;
+                focusUnityEditorTime -= previousUnityEditorUpdateTime;
+                loadedData.todayFocusUnityEditorTime += (uint)focusUnityEditorTime;
+                loadedData.weekFocusUnityEditorTime += (uint)focusUnityEditorTime;
+                loadedData.totalFocusUnityEditorTime += (uint)focusUnityEditorTime;
+                previousUnityEditorUpdateTime = EditorApplication.timeSinceStartup;
+            }
 
             if (CheckFocusCodeEditor())
             {
-                focusTime = EditorApplication.timeSinceStartup;
-                focusTime -= previousUpdateTime;
-                loadedData.todayFocusCodeEditorTime += (uint)focusTime;
-                loadedData.weekFocusCodeEditorTime += (uint)focusTime;
-                loadedData.totalFocusCodeEditorTime += (uint)focusTime;
-                previousUpdateTime = EditorApplication.timeSinceStartup;
+                focusCodeEditorTime = EditorApplication.timeSinceStartup;
+                focusCodeEditorTime -= previousCodeEditorUpdateTime;
+                loadedData.todayFocusCodeEditorTime += (uint)focusCodeEditorTime;
+                loadedData.weekFocusCodeEditorTime += (uint)focusCodeEditorTime;
+                loadedData.totalFocusCodeEditorTime += (uint)focusCodeEditorTime;
+                previousCodeEditorUpdateTime = EditorApplication.timeSinceStartup;
             }
+        }
+
+        private bool CheckFocusUnityEditor()
+        {
+            return EditorApplication.isFocused;
         }
 
         private bool CheckFocusCodeEditor()
@@ -373,7 +398,7 @@ namespace Kazuro.Editor.Achievement
             {
                 Process foregroundProcess = Process.GetProcessById((int)processId);
                 var editorName = foregroundProcess.ProcessName;
-                return String.Equals(editorName, editorExeName);
+                return string.Equals(editorName, editorExeName);
             }
             catch
             {
@@ -388,12 +413,13 @@ namespace Kazuro.Editor.Achievement
             UnityEngine.Debug.Log($"Boot Today: {TodayBootCount} Boot Total: {TotalBootCount}");
             UnityEngine.Debug.Log($"LastOpenDay: {LastOpenDate} CurrentContinueDays: {CurrentContinueDays}");
             UnityEngine.Debug.Log($"Build: {CurrentBuildCount}");
+            UnityEngine.Debug.Log($"UnityEditor: {TodayFocusUnityEditorTime}");
             UnityEngine.Debug.Log($"CodeEditor: {TodayFocusCodeEditorTime}");
         }
 
         public void Dispose()
         {
-            AchievementManager.Instance.OnUpdate -= UpdateFocusCodeEditorCount;
+            AchievementManager.Instance.OnUpdate -= UpdateFocusEditorCount;
             AchievementManager.Instance.OnUpdate -= CountBuild;
             EditorApplication.playModeStateChanged -= CountPlayMode;
             CompilationPipeline.compilationStarted -= CountCompile;

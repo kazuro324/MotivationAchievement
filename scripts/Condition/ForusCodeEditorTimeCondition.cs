@@ -2,8 +2,8 @@ using UnityEngine;
 
 namespace Kazuro.Editor.Achievement
 {
-    [CreateAssetMenu(fileName = "FocusTimeConditionFile", menuName = "Kazuro/Editor/Achievement/Condition/FocusTimeCondition")]
-    public class ForusOutTimeCondition : AchievementCondition
+    [CreateAssetMenu(fileName = "ForusCodeEditorTimeConditionFile", menuName = "Kazuro/Editor/Achievement/Condition/ForusCodeEditorTimeCondition")]
+    public class ForusCodeEditorTimeCondition : AchievementCondition
     {
         [SerializeField] private DayCategoryType dayCategory;
         [SerializeField] private TimeHolder targetTime;
