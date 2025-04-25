@@ -11,25 +11,25 @@ namespace Kazuro.Editor.Achievement
     [System.Serializable]
     public struct TimeHolder
     {
-        [SerializeField] private byte hour;
-        [SerializeField] private byte minute;
-        [SerializeField] private byte second;
+        [SerializeField] private int hour;
+        [SerializeField] private int minute;
+        [SerializeField] private int second;
 
-        public byte Hour { get { return hour; } }
+        public int Hour { get { return hour; } }
 
-        public byte Minute { get { return minute; } }
+        public int Minute { get { return minute; } }
 
-        public byte Second { get { return second; } }
+        public int Second { get { return second; } }
 
         const int ONEHOUR = 3600;
         const int ONEMINUTE = 60;
 
         public TimeHolder(uint seconds)
         {
-            byte sec = (byte)(seconds % ONEMINUTE);
-            var minute = (byte)(seconds / ONEMINUTE);
-            var min = (byte)(minute % ONEMINUTE);
-            var hour = (byte)(minute / ONEMINUTE);
+            var sec = (int)(seconds % ONEMINUTE);
+            var minute = (int)(seconds / ONEMINUTE);
+            var min = (int)(minute % ONEMINUTE);
+            var hour = (int)(minute / ONEMINUTE);
             this.hour = hour;
             this.minute = min;
             this.second = sec;
@@ -37,16 +37,16 @@ namespace Kazuro.Editor.Achievement
 
         public TimeHolder(int seconds)
         {
-            byte sec = (byte)(seconds % ONEMINUTE);
-            var minute = (byte)(seconds / ONEMINUTE);
-            var min = (byte)(minute % ONEMINUTE);
-            var hour = (byte)(minute / ONEMINUTE);
+            var sec = (int)(seconds % ONEMINUTE);
+            var minute = (int)(seconds / ONEMINUTE);
+            var min = (int)(minute % ONEMINUTE);
+            var hour = (int)(minute / ONEMINUTE);
             this.hour = hour;
             this.minute = min;
             this.second = sec;
         }
 
-        public TimeHolder(byte hour, byte minute, byte second)
+        public TimeHolder(int hour, int minute, int second)
         {
             this.hour = hour;
             this.minute = minute;
@@ -149,11 +149,6 @@ namespace Kazuro.Editor.Achievement
         private bool CheckTime(uint targetTime)
         {
             return targetTime >= timeHolder.ToSeconds();
-        }
-
-        private uint SecondToHours(double second)
-        {
-            return (uint)(second / ONEHOUR);
         }
     }
 }
