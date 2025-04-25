@@ -110,11 +110,17 @@ namespace Kazuro.Editor.Achievement
                 newData.todayPlayCount = 0;
                 newData.todayBuildCount = 0;
                 newData.todayBootCount = 0;
+                newData.todayCompileCount = 0;
+                newData.todayFocusUnityEditorTime = 0;
+                newData.todayFocusCodeEditorTime = 0;
                 newData.weekBootCount = 0;
                 newData.weekBuildCount = 0;
                 newData.weekPlayModeCount = 0;
                 newData.weekWorkTime = 0;
                 newData.weekBootDays = 0;
+                newData.weekCompileCount = 0;
+                newData.weekFocusUnityEditorTime = 0;
+                newData.weekFocusCodeEditorTime = 0;
                 newData.weekContinueFirstDays = 0;
                 newData.currentWorkTime = 0;
                 newData.currentContinueDays = 0;
@@ -123,6 +129,9 @@ namespace Kazuro.Editor.Achievement
                 newData.totalBuildCount = 0;
                 newData.totalPlayModeCount = 0;
                 newData.totalBootCount = 0;
+                newData.totalCompileCount = 0;
+                newData.totalFocusUnityEditorTime = 0;
+                newData.totalFocusCodeEditorTime = 0;
                 return newData;
             }
         }
@@ -238,20 +247,26 @@ namespace Kazuro.Editor.Achievement
                 loadedData.weekContinueFirstDays = 0;
             }
 
+            //ï ÇÃì˙
             if (timeDifference.Days != 0)
             {
+                //èTä‘ÇÃä«óù
+                if (DateTime.Today.DayOfWeek == DayOfWeek.Sunday)
+                {
+                    ResetWeeklyStats();
+                }
+
                 loadedData.weekBootDays++;
                 loadedData.totalBootDays++;
                 loadedData.todayBootCount = 0;
                 loadedData.todayWorkTime = 0;
                 loadedData.todayPlayCount = 0;
                 loadedData.todayBuildCount = 0;
+                loadedData.todayCompileCount = 0;
+                loadedData.weekFocusUnityEditorTime = 0;
+                loadedData.todayFocusCodeEditorTime = 0;
 
-                //èTä‘ÇÃä«óù
-                if (DateTime.Today.DayOfWeek == DayOfWeek.Sunday)
-                {
-                    ResetWeeklyStats();
-                }
+                
             }
 
             AchievementManager.Instance.OnUpdate += UpdateFocusEditorCount;
@@ -268,6 +283,9 @@ namespace Kazuro.Editor.Achievement
             loadedData.weekBuildCount = 0;
             loadedData.weekBootCount = 0;
             loadedData.weekBootDays = 0;
+            loadedData.weekCompileCount = 0;
+            loadedData.weekFocusUnityEditorTime = 0;
+            loadedData.weekFocusCodeEditorTime = 0;
             loadedData.weekContinueFirstDays = CurrentContinueDays;
         }
 
