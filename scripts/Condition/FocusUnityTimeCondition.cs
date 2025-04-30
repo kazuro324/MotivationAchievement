@@ -14,7 +14,7 @@ namespace Kazuro.Editor.Achievement
             int intCurrentCount;
             if (isProgressCountAtOnce)
             {
-                return (uint)(IsAchieved(data) ? 1 : 0);
+                return IsAchieved(data) ? 1u : 0u;
             }
             switch (dayCategory)
             {
@@ -35,7 +35,7 @@ namespace Kazuro.Editor.Achievement
                     break;
             }
 
-            return (uint)Mathf.Clamp(intCurrentCount, 0, GetMaxConditionCount(data));
+            return (uint)Mathf.Clamp(intCurrentCount, 0u, GetMaxConditionCount(data));
         }
 
         public override uint GetMaxConditionCount(AchievementDataManager data)
@@ -45,7 +45,7 @@ namespace Kazuro.Editor.Achievement
             {
                 minute = 1;
             }
-            return isProgressCountAtOnce ? 1 : minute;
+            return isProgressCountAtOnce ? 1u : minute;
         }
 
         public override bool IsAchieved(AchievementDataManager data)

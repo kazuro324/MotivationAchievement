@@ -38,14 +38,14 @@ namespace Kazuro.Editor.Achievement
 
             if (isProgressCountAtOnce)
             {
-                return (uint)(currentCount < targetBootCount ? 0 : 1);
+                return currentCount < targetBootCount ? 0u : 1u;
             }
-            return (uint)Mathf.Clamp(currentCount, 0, GetMaxConditionCount(data));
+            return (uint)Mathf.Clamp(currentCount, 0u, GetMaxConditionCount(data));
         }
 
         public override uint GetMaxConditionCount(AchievementDataManager data)
         {
-            return isProgressCountAtOnce ? 1 : targetBootCount;
+            return isProgressCountAtOnce ? 1u : targetBootCount;
         }
 
         public override bool IsAchieved(AchievementDataManager data)

@@ -14,12 +14,12 @@ namespace Kazuro.Editor.Achievement
 
         public override uint GetCurrentConditionCount(AchievementDataManager data)
         {
-            return (uint)(IsAchieved(data) ? 1 : 0);
+            return IsAchieved(data) ? 1u : 0u;
         }
 
         public override uint GetMaxConditionCount(AchievementDataManager data)
         {
-            return 1;
+            return 1u;
         }
 
         public override bool IsAchieved(AchievementDataManager data)
