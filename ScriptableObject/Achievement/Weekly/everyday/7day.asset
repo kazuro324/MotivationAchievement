@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1abfeb6d3e2d3b4394599cbc7c5b912, type: 3}
   m_Name: 7day
   m_EditorClassIdentifier: 
-  continueDateType: 0
+  continueDateType: 1
   targetContinueDay: 7
   isProgressCountAtOnce: 0

@@ -11,6 +11,15 @@ namespace Kazuro.Editor.Achievement
     [System.Serializable]
     public struct TimeHolder
     {
+        public enum SelectDay
+        {
+            Yesterday,
+            Today,
+            Tomorrow,
+        }
+
+        [SerializeField] private SelectDay targetDay;
+
         [SerializeField] private int hour;
         [SerializeField] private int minute;
         [SerializeField] private int second;
@@ -21,11 +30,14 @@ namespace Kazuro.Editor.Achievement
 
         public int Second { get { return second; } }
 
+        public SelectDay TargetDay { get { return targetDay; } }
+
         const int ONEHOUR = 3600;
         const int ONEMINUTE = 60;
 
         public TimeHolder(uint seconds)
         {
+            targetDay = SelectDay.Today;
             var sec = (int)(seconds % ONEMINUTE);
             var minute = (int)(seconds / ONEMINUTE);
             var min = (int)(minute % ONEMINUTE);
@@ -37,6 +49,7 @@ namespace Kazuro.Editor.Achievement
 
         public TimeHolder(int seconds)
         {
+            targetDay = SelectDay.Today;
             var sec = (int)(seconds % ONEMINUTE);
             var minute = (int)(seconds / ONEMINUTE);
             var min = (int)(minute % ONEMINUTE);
@@ -48,6 +61,7 @@ namespace Kazuro.Editor.Achievement
 
         public TimeHolder(int hour, int minute, int second)
         {
+            targetDay = SelectDay.Today;
             this.hour = hour;
             this.minute = minute;
             this.second = second;
@@ -70,10 +84,26 @@ namespace Kazuro.Editor.Achievement
 
         public DateTime CreateDate()
         {
+            int day = DateTime.Now.Day;
+
+            switch (targetDay)
+            {
+                case SelectDay.Yesterday:
+                    day--;
+                    break;
+
+                case SelectDay.Today:
+                    break;
+
+                case SelectDay.Tomorrow:
+                    day++;
+                    break;
+            }
+
             DateTime tempTime = new DateTime(
                 DateTime.Now.Year,
                 DateTime.Now.Month,
-                DateTime.Now.Day
+                day
                 );
 
             tempTime.AddSeconds(ToSeconds());

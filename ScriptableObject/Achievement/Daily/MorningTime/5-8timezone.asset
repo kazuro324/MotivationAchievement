@@ -13,10 +13,12 @@ MonoBehaviour:
   m_Name: 5-8timezone
   m_EditorClassIdentifier: 
   startTime:
+    targetDay: 1
     hour: 5
     minute: 0
     second: 0
   progressTime:
+    targetDay: 1
     hour: 3
     minute: 0
     second: 0
