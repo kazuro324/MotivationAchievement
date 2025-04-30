@@ -117,14 +117,14 @@ namespace Kazuro.Editor.Achievement
 
             if (isProgressCountAtOnce)
             {
-                return (uint)(value < timeHolder.ToHours() ? 0 : 1);
+                return value < timeHolder.ToHours() ? 0u : 1u;
             }
             return (uint)Mathf.Clamp(value, 0, GetMaxConditionCount(data));
         }
 
         public override uint GetMaxConditionCount(AchievementDataManager data)
         {
-            return isProgressCountAtOnce ? 1 : timeHolder.ToHours();
+            return isProgressCountAtOnce ? 1u : timeHolder.ToHours();
         }
 
         public override bool IsAchieved(AchievementDataManager data)

@@ -35,7 +35,7 @@ namespace Kazuro.Editor.Achievement
 
             if (isProgressCountAtOnce)
             {
-                return (uint)(currentCount < targetCount ? 0 : 1);
+                return currentCount < targetCount ? 0u : 1u;
             }
             return (uint)Mathf.Clamp(currentCount, 0, GetMaxConditionCount(data));
         }
