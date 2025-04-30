@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace Kazuro.Editor.Achievement
 {
+    [CreateAssetMenu(menuName = "Kazuro/Editor/Achievement/Condition/Alternative Condition"), Icon("Assets/Editor/scripts/Condition/Icons/AlternativeCondition.png")]
     public class AlternativeCondition : AchievementCondition
     {
         [SerializeField] private AchievementCondition[] alternativeList;
